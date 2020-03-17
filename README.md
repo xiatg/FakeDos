@@ -23,7 +23,7 @@
 
 我们所做的任何文件操作都将被限制在某个文件夹中。
 
-    ![image](http://github.com/watanabexia/CSC3002Project/raw/master/images/document_architecture.jpeg)
+![image](http://github.com/watanabexia/CSC3002Project/raw/master/images/document_architecture.jpeg)
 
 	功能实现的最低要求：
 	
