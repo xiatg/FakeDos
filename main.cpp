@@ -1,9 +1,8 @@
 #include <iostream>
-
+#include <fakeDos.h>
 using namespace std;
 
 int main(){
-    cout << "Hello World!" << endl;
-    cout << "PULL REQuest";
+    fakeDos();
     return 0;
 }
