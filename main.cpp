@@ -1,8 +1,8 @@
 #include <iostream>
-
+#include <fakeDos.h>
 using namespace std;
 
 int main(){
-    cout << "Hello World!" << endl;
+    fakeDos();
     return 0;
 }
