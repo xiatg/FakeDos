@@ -145,7 +145,7 @@ void exit() {
     write_users();
 }
 
-void fakeDos() {
+void fakeDos() { // fakeDos main process
     cout << "fakeDos Prototype" << endl;
     cout << "System boosting..." << endl;
 
@@ -167,14 +167,14 @@ void fakeDos() {
             cout << current_user << "@" << current_path << " $";
         }
 
-        getline(cin, command);
+        getline(cin, command); // read the command as a whole line
 
         /*
         //Debug
 //        cout << command << endl;
         */
 
-        vector<string> command_splited = command_split(command);
+        vector<string> command_splited = command_split(command); // split the command by blank space
         string operation = command_splited[0];
 
         vector<string>::iterator it = find(operation_list.begin(), operation_list.end(), operation);
