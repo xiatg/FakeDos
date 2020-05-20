@@ -8,8 +8,10 @@
 /*
  * Create a user.
  */
-void create_user(std::vector<std::string> command_splited, std::vector<std::string> & user_name, std::map<std::string, std::string> & user_password);
+void create_user(std::vector<std::string> command_splited, std::vector<std::string> & user_name, std::map<std::string, std::string> & user_password, std::string fakeDosFolderPath);
 
 void log_in(std::vector<std::string> command_splited, std::vector<std::string> user_name, std::map<std::string, std::string> user_password, bool & is_logged_in, std::string & current_user, std::string & current_path);
+
+void log_out(bool & is_logged_in);
 
 #endif // USERMANAGEMENT_H

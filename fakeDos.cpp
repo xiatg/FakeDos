@@ -6,7 +6,8 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "dist/json/json.h"
+#include <io.h>
+#include <direct.h>
 #include <fakeDos.h>
 #include <userManagement.h>
 using namespace std;
@@ -17,22 +18,33 @@ string current_path;
 string command;
 
 string fakeDosFolderPath;
+//string fileFolderPath;
+//string systemFolderPath;
+string usersFilePath;
 
 vector<string> operation_list{
     "exit",
     "create_user",
     "log_in",
-    "delete_user"
+//    "delete_user",
+    "log_out",
+    "help"
 };
 
 map<string, string> operation_syntax{
+    {"help", "help"},
     {"create_user", "create_user (user name) (password)"},
-    {"log_in", "log_in (user_name) (password)"}
+    {"log_in", "log_in (user_name) (password)"},
+    {"log_out", "log_out"},
+    {"exit", "exit"}
 };
 
 map<string, string> operation_description{
+    {"help", "See description and syntax for all operations."},
     {"create_user", "Create a new user."},
-    {"log_in", "Log in with the identity of a user."}
+    {"log_in", "Log in with the identity of a user."},
+    {"log_out", "Log out from the current user."},
+    {"exit", "Shutdown FakeDos."}
 };
 
 vector<string> user_name;
@@ -60,19 +72,77 @@ vector<string> command_split(string command) {
     return command_splited;
 }
 
-void fakeDosPre() {
+void read_users() {
+    ifstream ifs;
+    ifs.open((usersFilePath).c_str());
+    string line;
+    string username;
+    bool is_username = true;
+    while (getline(ifs, line)) {
+        if (is_username) {
+            user_name.push_back(line);
+            username = line;
+            is_username = false;
+        } else {
+            user_password[username] = line;
+            is_username = true;
+        }
+    }
+    ifs.close();
+}
 
+void write_users() {
+    ofstream ofs;
+    ofs.open((usersFilePath).c_str());
+    for (int i = 0; i < int(user_name.size()); i++) {
+        string username = user_name[i];
+        string password = user_password[username];
+
+        for (int j = 0; j < int(username.size()); j++) {
+            ofs.put(username[j]);
+        }
+        ofs.put('\n');
+        for (int j = 0; j < int(password.size()); j++) {
+            ofs.put(password[j]);
+        }
+        ofs.put('\n');
+    }
+    ofs.close();
+}
+
+void fakeDosPre() {
     char *buffer;
     buffer = getcwd(NULL, 0);
     string route(buffer);
 
-    system("mkdir fakeDos");
-    system("mkdir fakeDos\\system");
-    system("mkdir fakeDos\\users");
-    system("mkdir fakeDos\\files");
+    if ((_access("fakeDos", 0)) == -1) {
+        system("mkdir fakeDos");
+        system("mkdir fakeDos\\system");
+        system("mkdir fakeDos\\users");
+        system("mkdir fakeDos\\files");
+    }
 
-    fakeDosFolderPath = route;
+    fakeDosFolderPath = route + "\\fakeDos";
+    usersFilePath = fakeDosFolderPath + "\\system\\users.txt";
 
+    if ((_access(usersFilePath.c_str(), 0) == -1)) {
+        system(("type nul>" + usersFilePath).c_str());
+    } else {
+        read_users();
+    }
+}
+
+void help() {
+    for (int i = 0; i < int(operation_list.size()); i++) {
+        string op = operation_list[i];
+        cout << op << ": " << operation_syntax[op] << endl;
+        cout << "\t" << operation_description[op] << endl;
+    }
+}
+
+void exit() {
+    cout << "System shutting down..." << endl << "See you next time!" << endl;
+    write_users();
 }
 
 void fakeDos() {
@@ -86,11 +156,12 @@ void fakeDos() {
     while (exitable == false) {
 
         if (is_logged_in == false) {
-            cout << "Please log in!" << endl;
+            cout << "Please log in with the following command: " << endl;
+            cout << "\tlog_in (username) (password)" << endl;
 
             if (user_name.size() == 0) {
                 cout << "No valid user is found. Please create a user with the following command: " << endl;
-                cout << "create_user (user name) (password)" << endl;
+                cout << "\tcreate_user (user name) (password)" << endl;
             }
         } else {
             cout << current_user << "@" << current_path << " $";
@@ -117,8 +188,16 @@ void fakeDos() {
 
         if (it != operation_list.end()) {
 
+            if (operation == "help") {
+                help();
+            }
+
             if (operation == "create_user") {
-                create_user(command_splited, user_name, user_password);
+                create_user(command_splited, user_name, user_password, fakeDosFolderPath);
+            }
+
+            if (operation == "log_out") {
+                log_out(is_logged_in);
             }
 
             if (operation == "log_in") {
@@ -126,7 +205,7 @@ void fakeDos() {
             }
 
             if (operation == "exit") {
-                cout << "System shutting down..." << endl;
+                exit();
                 exitable = true;
                 break;
             }
