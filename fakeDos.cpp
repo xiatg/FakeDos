@@ -10,6 +10,7 @@
 #include <direct.h>
 #include <fakeDos.h>
 #include <userManagement.h>
+#include <fileManagement.h>
 using namespace std;
 
 string current_user;
@@ -28,7 +29,21 @@ vector<string> operation_list{
     "log_in",
 //    "delete_user",
     "log_out",
-    "help"
+    "help",
+
+/* 下面是文件管理指令 */
+    "make_dir",
+    "make_file",
+    "del_dir",
+    "del_file",
+
+    "copy",
+    "move",
+
+    "show_content",
+    "change_path"
+
+
 };
 
 map<string, string> operation_syntax{
@@ -36,7 +51,19 @@ map<string, string> operation_syntax{
     {"create_user", "create_user (user name) (password)"},
     {"log_in", "log_in (user_name) (password)"},
     {"log_out", "log_out"},
-    {"exit", "exit"}
+    {"exit", "exit"},
+
+  /*--------------------*/
+
+    {"make_dir", "make_dir (name)"},
+    {"make_file", "make_file (name)"},
+    {"del_dir", "del_dir (name)"},
+    {"del_file", "del_file (name)"},
+    {"copy","copy (name/path1) to (name/path2) "},
+    {"move","move (name/path1) to (name/path2) "},
+    {"show_content", "show_content"},
+    {"change_path", "change_path (name)"}
+
 };
 
 map<string, string> operation_description{
@@ -44,7 +71,18 @@ map<string, string> operation_description{
     {"create_user", "Create a new user."},
     {"log_in", "Log in with the identity of a user."},
     {"log_out", "Log out from the current user."},
-    {"exit", "Shutdown FakeDos."}
+    {"exit", "Shutdown FakeDos."},
+
+    {"make_dir", "Create a new directory under current route."},
+    {"make_file", "Creaate a new text file under current route."},
+    {"del_dir", "Delete a directory under current route."},
+    {"del_file", "Delete a txt file under current route."},
+    {"copy","Copy file/dir 1 to dir 2."},
+    {"move","Move file/dir 1 to dir 2."},
+    {"show_content", "Show the content of current directory."},
+    {"change_path", "Change current path to a specific directory. "
+        "You can go to upper class directory by entering 'u'"}
+
 };
 
 vector<string> user_name;
@@ -52,6 +90,8 @@ vector<string> user_name;
 map<string, string> user_password;
 
 map<string, string> user_route;
+
+
 
 bool exitable = false;
 
@@ -78,13 +118,25 @@ void read_users() {
     string line;
     string username;
     bool is_username = true;
+
+    //修改
+    bool is_password = false;
+    bool is_route = false;
+
     while (getline(ifs, line)) {
         if (is_username) {
             user_name.push_back(line);
             username = line;
             is_username = false;
-        } else {
+            is_password = true;
+
+        } else if (is_password){
             user_password[username] = line;
+            is_password = false;
+            is_route = true;
+        } else if (is_route){
+            user_route[username] = line;
+            is_route = false;
             is_username = true;
         }
     }
@@ -98,6 +150,10 @@ void write_users() {
         string username = user_name[i];
         string password = user_password[username];
 
+
+        string userRoute = user_route[username];
+
+
         for (int j = 0; j < int(username.size()); j++) {
             ofs.put(username[j]);
         }
@@ -106,6 +162,13 @@ void write_users() {
             ofs.put(password[j]);
         }
         ofs.put('\n');
+
+        /*----------------------*/
+        for (int j = 0; j < int(userRoute.size()); j++) {
+            ofs.put(userRoute[j]);
+        }
+        ofs.put('\n');
+        /*----------------------*/
     }
     ofs.close();
 }
@@ -153,6 +216,9 @@ void fakeDos() { // fakeDos main process
 
     cout << "Welcome to fakeDos! Type help for more information." << endl;
 
+    cout << fakeDosFolderPath<<endl;
+    cout << usersFilePath<<endl;
+
     while (exitable == false) {
 
         if (is_logged_in == false) {
@@ -164,6 +230,8 @@ void fakeDos() { // fakeDos main process
                 cout << "\tcreate_user (user name) (password)" << endl;
             }
         } else {
+
+            current_path = user_route[current_user];
             cout << current_user << "@" << current_path << " $";
         }
 
@@ -193,7 +261,7 @@ void fakeDos() { // fakeDos main process
             }
 
             if (operation == "create_user") {
-                create_user(command_splited, user_name, user_password, fakeDosFolderPath);
+                create_user(command_splited, user_name, user_password, user_route, fakeDosFolderPath);
             }
 
             if (operation == "log_out") {
@@ -201,7 +269,7 @@ void fakeDos() { // fakeDos main process
             }
 
             if (operation == "log_in") {
-                log_in(command_splited, user_name, user_password, is_logged_in, current_user, current_path);
+                log_in(command_splited, user_name, user_password, user_route, is_logged_in, current_user, current_path);
             }
 
             if (operation == "exit") {
@@ -209,6 +277,49 @@ void fakeDos() { // fakeDos main process
                 exitable = true;
                 break;
             }
+
+            /*---------------------*/
+            if (operation == "make_dir"){
+                string name = command_splited[1];
+                make_dir(name, fakeDosFolderPath, current_user, user_route);
+            }
+
+            if (operation == "make_file"){
+                string name = command_splited[1];
+                make_file(name,fakeDosFolderPath,current_user,user_route);
+            }
+
+            if (operation == "del_dir"){
+                string name = command_splited[1];
+                del_dir(name,fakeDosFolderPath, current_user,user_route);
+            }
+
+            if (operation == "del_file"){
+                string name = command_splited[1];
+                del_file(name,fakeDosFolderPath,current_user,user_route);
+            }
+
+            if (operation == "copy"){
+                string this_name = command_splited[1];
+                string taregt_name = command_splited[2];
+                copy(this_name,taregt_name,fakeDosFolderPath,current_user,user_route);
+            }
+
+            if (operation == "move"){
+                string this_name = command_splited[1];
+                string taregt_name = command_splited[2];
+                move(this_name,taregt_name,fakeDosFolderPath,current_user,user_route);
+            }
+
+            if (operation == "show_content"){
+                show_content(fakeDosFolderPath,current_user,user_route);
+            }
+
+            if (operation == "change_path"){
+                string name = command_splited[1];
+                change_path(name,fakeDosFolderPath,current_user,user_route);
+            }
+
 
         } else {
             cout << "Invalid command: " << operation << endl;
