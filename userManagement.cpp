@@ -10,7 +10,7 @@
 #include <userManagement.h>
 using namespace std;
 
-void create_user(vector<string> command_splited, vector<string> & user_name, map<string, string> & user_password, string fakeDosFolderPath) {
+void create_user(vector<string> command_splited, vector<string> & user_name, map<string, string> & user_password,  map<string, string> & user_route, string fakeDosFolderPath) {
     if (command_splited.size() < 3) {
         cout << "Error: Please enter valid user name and password." << endl;
         cout << "\tcreate_user (user name) (password)" << endl;
@@ -24,6 +24,10 @@ void create_user(vector<string> command_splited, vector<string> & user_name, map
 
             user_name.push_back(username);
             user_password[username] = password;
+
+            string userRoute = "users\\"+username;
+            user_route[username] = userRoute;
+
             _mkdir((fakeDosFolderPath + "\\users\\" + username).c_str());
 
             // Debug
@@ -44,7 +48,7 @@ void create_user(vector<string> command_splited, vector<string> & user_name, map
     }
 }
 
-void log_in(vector<string> command_splited, vector<string> user_name, map<string, string> user_password, bool & is_logged_in, string & current_user, string & current_path) {
+void log_in(vector<string> command_splited, vector<string> user_name, map<string, string> user_password, map<string, string> user_route, bool & is_logged_in, string & current_user, string & current_path) {
 
     if (is_logged_in) {
         cout << "Error: you have already logged in!" << endl;
@@ -64,7 +68,7 @@ void log_in(vector<string> command_splited, vector<string> user_name, map<string
                     cout << "Welcome back, " << username << "!" << endl;
                     is_logged_in = true;
                     current_user = username;
-                    current_path = "users\\" + username;
+                    current_path = user_route[username];
                 } else {
                     cout << "Error: incorrent password." << endl;
                 }

@@ -44,6 +44,4 @@ string upper_route(string &current_route);
 
 void change_path(string name, string fakeDosFolderPath, string current_user, map<string, string> &user_route );
 
-
->>>>>>> Stashed changes
 #endif // FILEMANAGEMENT_H
