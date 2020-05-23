@@ -1,0 +1,4 @@
+#ifndef FILEMANAGEMENT_H
+#define FILEMANAGEMENT_H
+
+#endif // FILEMANAGEMENT_H
