@@ -15,9 +15,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+<<<<<<< Updated upstream
         FileSystem.cpp \
         editor.cpp \
         stringOperators.cpp
+=======
+        dist/jsoncpp.cpp \
+        fakeDos.cpp \
+        fileManagement.cpp \
+        main.cpp \
+        userManagement.cpp
+>>>>>>> Stashed changes
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -25,6 +33,14 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+<<<<<<< Updated upstream
     FileSystem.h \
     editorBuffer.h \
     stringOperators.h
+=======
+    dist/json/json-forwards.h \
+    dist/json/json.h \
+    fakeDos.h \
+    fileManagement.h \
+    userManagement.h
+>>>>>>> Stashed changes
