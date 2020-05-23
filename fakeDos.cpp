@@ -216,8 +216,10 @@ void fakeDos() { // fakeDos main process
 
     cout << "Welcome to fakeDos! Type help for more information." << endl;
 
+
     cout << fakeDosFolderPath<<endl;
     cout << usersFilePath<<endl;
+
 
     while (exitable == false) {
 
