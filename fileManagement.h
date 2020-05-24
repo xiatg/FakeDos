@@ -39,11 +39,19 @@ void move(string this_name, string target_name, string fakeDosFolderPath,
 
 
 
+void read(string name, string fakeDosFolderPath,
+          string current_user, map<string, string> &user_route);
+
+void write(string name, string fakeDosFolderPath,
+          string current_user, map<string, string> &user_route);
+
+
+
 
 // show the content of current directory
 void show_content(string fakeDosFolderPath, string current_user, map<string, string> &user_route );
 
-vector<string> getFiles(string cate_dir);
+vector<string> getFiles(string current_route);
 
 void printNames(string true_current_route, string fake_current_route);
 

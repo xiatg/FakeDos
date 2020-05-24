@@ -37,6 +37,9 @@ vector<string> operation_list{
     "del_dir",
     "del_file",
 
+    "read",
+    "write",
+
     "copy",
     "move",
 
@@ -59,6 +62,8 @@ map<string, string> operation_syntax{
     {"make_file", "make_file (name)"},
     {"del_dir", "del_dir (name)"},
     {"del_file", "del_file (name)"},
+    {"read", "read (name)"},
+    {"write", "write (name)"},
     {"copy","copy (name/path1) to (name/path2) "},
     {"move","move (name/path1) to (name/path2) "},
     {"show_content", "show_content"},
@@ -74,14 +79,17 @@ map<string, string> operation_description{
     {"exit", "Shutdown FakeDos."},
 
     {"make_dir", "Create a new directory under current route."},
-    {"make_file", "Creaate a new text file under current route."},
+    {"make_file", "Create a new text file under current route."},
     {"del_dir", "Delete a directory under current route."},
     {"del_file", "Delete a txt file under current route."},
-    {"copy","Copy file/dir 1 to dir 2."},
-    {"move","Move file/dir 1 to dir 2."},
+    {"read","Read a text file."},
+    {"write", "Write in a text file."},
+    {"copy","Copy file/dir 1 to dir 2. When copying txt file, you need to add (.txt) after its name."},
+    {"move","Move file/dir 1 to dir 2. When moving txt file, you need to add (.txt) after its name."},
     {"show_content", "Show the content of current directory."},
     {"change_path", "Change current path to a specific directory. "
-        "You can go to upper class directory by entering 'u'"}
+        "You can go to upper class directory by entering 'u', "
+        "and go to root directory by entering 'rt'."}
 
 };
 
@@ -217,8 +225,8 @@ void fakeDos() { // fakeDos main process
     cout << "Welcome to fakeDos! Type help for more information." << endl;
 
 
-    cout << fakeDosFolderPath<<endl;
-    cout << usersFilePath<<endl;
+    //cout << fakeDosFolderPath<<endl;
+    //cout << usersFilePath<<endl;
 
 
     while (exitable == false) {
@@ -299,6 +307,16 @@ void fakeDos() { // fakeDos main process
             if (operation == "del_file"){
                 string name = command_splited[1];
                 del_file(name,fakeDosFolderPath,current_user,user_route);
+            }
+
+            if (operation == "read"){
+                string name = command_splited[1];
+                read(name,fakeDosFolderPath,current_user,user_route);
+            }
+
+            if (operation == "write"){
+                string name = command_splited[1];
+                write(name,fakeDosFolderPath,current_user,user_route);
             }
 
             if (operation == "copy"){

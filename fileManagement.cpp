@@ -5,9 +5,6 @@
 #include <vector>
 #include <fstream>
 
-// 用于记录某个用户的当前路径，应作为的一部分，这样每个用户重新登陆时都会回到其登出时的状态
-//map<string, string> user_route;
-
 bool isPath(string &str){
     for (int i = 0; i<int(str.length()); i++){
         if (str[i]=='\\') return true;
@@ -15,6 +12,12 @@ bool isPath(string &str){
     return false;
 }
 
+bool find(vector<string> &fileNames, string name){
+    for (int i = 0; i < int(fileNames.size()); i++){
+        if (fileNames[i] == name) return true;
+    }
+    return false;
+}
 
 vector<string> getFiles(string current_route){
     vector<string> files;
@@ -114,7 +117,9 @@ void change_path(string name, string fakeDosFolderPath,
 
     if (name == "u"){
         user_route[current_user] = upper_route(user_route[current_user]);
-    }else{
+    } else if (name == "rt"){
+        user_route[current_user] = "(root)";
+    }   else{
         if (user_route[current_user] == "(root)"){
             target_path = fakeDosFolderPath+ "\\" + name;
 
@@ -126,15 +131,27 @@ void change_path(string name, string fakeDosFolderPath,
             }
 
         }else{
-            target_path = fakeDosFolderPath+ "\\" + user_route[current_user] + "\\"+ name;
+            vector<string> fileNames = getFiles(fakeDosFolderPath + "\\*");
+
+            if (isPath(name) || (find(fileNames, name))){
+                target_path = fakeDosFolderPath + "\\" + name;
+            }else {
+                target_path = fakeDosFolderPath+ "\\" + user_route[current_user] + "\\"+ name;
+            }
+
             if (_access(target_path.c_str(),0)== -1){
                 cout << "Error: Directory doesn't exist."<<endl;
                 return;
             }else{
-                user_route[current_user] = user_route[current_user] + "\\"+ name;
+                if (isPath(name) || (find(fileNames, name))){
+                    user_route[current_user] = name;
+                }else{
+                    user_route[current_user] = user_route[current_user] + "\\"+ name;
+                }
             }
         }
     }
+
 }
 
 
@@ -187,6 +204,12 @@ void copy(string this_name, string target_name, string fakeDosFolderPath,
         current_route = fakeDosFolderPath+"\\"+user_route[current_user];
     }
 
+     vector<string> fileNames = getFiles(fakeDosFolderPath + "\\*");
+
+    if (isPath(target_name) || (find(fileNames, target_name))){
+        target_name = fakeDosFolderPath+"\\"+target_name;
+    }
+
     string command1 = "cd "+ current_route;
     string command2 = "xcopy "+ this_name + " "+ target_name +" /s /e";
     system((command1 + " && "+ command2).c_str());
@@ -202,9 +225,77 @@ void move(string this_name, string target_name, string fakeDosFolderPath,
         current_route = fakeDosFolderPath+"\\"+user_route[current_user];
     }
 
+    vector<string> fileNames = getFiles(fakeDosFolderPath + "\\*");
+
+    if (isPath(target_name) || (find(fileNames, target_name))){
+        target_name = fakeDosFolderPath+"\\"+target_name;
+    }
     string command1 = "cd "+ current_route;
     string command2 = "move "+ this_name + " "+ target_name;
     system((command1 + " && "+ command2).c_str());
 }
 
 
+void read(string name, string fakeDosFolderPath,
+          string current_user, map<string, string> &user_route){
+
+    ifstream infile;
+    ofstream outfile;
+    string current_route;
+
+    if (user_route[current_user] == "(root)"){
+        current_route = fakeDosFolderPath;
+    }else {
+        current_route = fakeDosFolderPath+"\\"+user_route[current_user];
+    }
+    current_route = current_route + "\\"+ name +".txt";
+
+    infile.open(current_route.c_str());
+    if (infile.fail()){
+        cout << "Error: file doesn't exist."<<endl;
+        infile.close();
+        return;
+    }else{
+        cout << "Read text file '"<<name<<"': "<<endl;
+        while(true){
+            string line;
+            getline(infile, line);
+            if(infile.fail()) break;
+            cout << line << endl;
+        }
+        cout <<endl;
+    }
+}
+
+void write(string name, string fakeDosFolderPath,
+           string current_user, map<string, string> &user_route){
+
+    ifstream infile;
+    ofstream outfile;
+    string current_route;
+
+    if (user_route[current_user] == "(root)"){
+        current_route = fakeDosFolderPath;
+    }else {
+        current_route = fakeDosFolderPath+"\\"+user_route[current_user];
+    }
+    current_route = current_route + "\\"+ name +".txt";
+
+    infile.open(current_route.c_str());
+    if (infile.fail()){
+        cout << "Error: file doesn't exist."<<endl;
+        infile.close();
+        return;
+    }else{
+        infile.close();
+        cout << "Write in text file '"<< name << "' (enter 'eee' to terminate): "<<endl;
+        outfile.open(current_route.c_str(), ios::app);
+        while(true){
+            string line;
+            getline(cin, line);
+            if (line == "eee") break;
+            outfile << line<<endl;
+
+        }
+    }
+}
