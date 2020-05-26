@@ -26,7 +26,7 @@ void create_user(vector<string> command_splited, vector<string> & user_name, map
             user_name.push_back(username);
             user_password[username] = password;
 
-            string userRoute = "users\\"+username;
+            string userRoute = "root\\users\\"+username;
             user_route[username] = userRoute;
 
             _mkdir((fakeDosFolderPath + "\\users\\" + username).c_str());

@@ -65,8 +65,8 @@ map<string, string> operation_syntax{ // the syntax for all operations
     {"del_file", "del_file (name)"},
     {"read", "read (name)"},
     {"write", "write (name)"},
-    {"copy","copy (name/path1) to (name/path2) "},
-    {"move","move (name/path1) to (name/path2) "},
+    {"copy","copy (name/path1) (name/path2) "},
+    {"move","move (name/path1) (name/path2) "},
     {"show_content", "show_content"},
     {"change_path", "change_path (name)"}
 };
