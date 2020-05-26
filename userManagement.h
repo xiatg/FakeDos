@@ -15,9 +15,9 @@ void create_user(vector<string> command_splited, vector<string> & user_name,
 
 void log_in(vector<string> command_splited, vector<string> user_name,
             map<string, string> user_password, map<string, string> user_route,
-            bool & is_logged_in, string & current_user, string & current_path);
+            bool & is_logged_in, string & current_user, string & current_path, std::vector<std::string> & logged_in_users);
 
-void delete_user(std::vector<std::string> command_splited, std::vector<std::string> & user_name, std::map<std::string, std::string> & user_password, std::string fakeDosFolderPath, std::vector<std::string> & logged_in_users);
+void delete_user(std::vector<std::string> command_splited, std::vector<std::string> & user_name, std::map<std::string, std::string> & user_password, map<string, string> & user_route, std::string fakeDosFolderPath, std::vector<std::string> & logged_in_users);
 
 void change_user(bool & is_logged_in);
 

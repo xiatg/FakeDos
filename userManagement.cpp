@@ -11,8 +11,7 @@
 #include "fakeDos.h"
 using namespace std;
 
-//缺少对用户所在目录的管制
-void create_user(vector<string> command_splited, vector<string> & user_name, map<string, string> & user_password, string fakeDosFolderPath) {
+void create_user(vector<string> command_splited, vector<string> & user_name, map<string, string> & user_password, map<string, string> & user_route, string fakeDosFolderPath) {
     if (command_splited.size() < 3) {
         cout << "Error: Please enter a valid user name and password." << endl;
         cout << "\tcreate_user (user name) (password)" << endl;
@@ -53,8 +52,7 @@ void create_user(vector<string> command_splited, vector<string> & user_name, map
 }
 
 // 缺少对进程的管制
-// 缺少对用户所在目录的管制
-void delete_user(vector<string> command_splited, vector<string> & user_name, map<string, string> & user_password, string fakeDosFolderPath, vector<string> & logged_in_users) {
+void delete_user(vector<string> command_splited, vector<string> & user_name, map<string, string> & user_password, map<string, string> & user_route, string fakeDosFolderPath, vector<string> & logged_in_users) {
     if (command_splited.size() < 2) {
         cout << "Error: Please enter a valid user name." << endl;
         cout << "\tdelete_user (user name)" << endl;
@@ -74,6 +72,7 @@ void delete_user(vector<string> command_splited, vector<string> & user_name, map
             if (password == user_password[username]) {
                 user_name.erase(it);
                 user_password.erase(username);
+                user_route.erase(username);
                 system(("rmdir /s /Q " + fakeDosFolderPath + "\\users\\" + username).c_str());
 
                 vector<string>::iterator it2 = find(logged_in_users.begin(), logged_in_users.end(), username);
@@ -102,8 +101,7 @@ void change_user(bool & is_logged_in) {
     }
 }
 
-//缺少对用户目录的控制
-void log_in(vector<string> command_splited, vector<string> user_name, map<string, string> user_password, bool & is_logged_in, string & current_user, string & current_path, vector<string> & logged_in_users) {
+void log_in(vector<string> command_splited, vector<string> user_name, map<string, string> user_password, map<string, string> user_route, bool & is_logged_in, string & current_user, string & current_path, vector<string> & logged_in_users) {
     if (is_logged_in) {
         cout << "Error: you have already logged in!" << endl;
     } else {

@@ -93,7 +93,7 @@ map<string, string> operation_description{ // the function description of all op
     {"show_content", "Show the content of current directory."},
     {"change_path", "Change current path to a specific directory. "
         "You can go to upper class directory by entering 'u', "
-        "and go to root directory by entering 'rt'."}
+        "and go to root directory by entering 'rt\'."}
 };
 
 vector<string> user_name;
@@ -272,12 +272,12 @@ void fakeDos() { // fakeDos main process
             }
 
             if (operation == "create_user") {
-                create_user(command_splited, user_name, user_password, fakeDosFolderPath);
+                create_user(command_splited, user_name, user_password, user_route, fakeDosFolderPath);
                 write_users();
             }
 
             if (operation == "delete_user") {
-                delete_user(command_splited, user_name, user_password, fakeDosFolderPath, logged_in_users);
+                delete_user(command_splited, user_name, user_password, user_route, fakeDosFolderPath, logged_in_users);
                 write_users();
             }
 
@@ -290,7 +290,7 @@ void fakeDos() { // fakeDos main process
             }
 
             if (operation == "log_in") {
-                log_in(command_splited, user_name, user_password, is_logged_in, current_user, current_path, logged_in_users);
+                log_in(command_splited, user_name, user_password, user_route, is_logged_in, current_user, current_path, logged_in_users);
             }
 
             if (operation == "ls_lu") {
