@@ -23,15 +23,17 @@ string fakeDosFolderPath;
 //string systemFolderPath;
 string usersFilePath;
 
-vector<string> operation_list{
+vector<string> operation_list{ // the list of all available operations
     "exit",
     "create_user",
     "log_in",
-//    "delete_user",
+    "change_user",
+    "ls_u",
+    "ls_lu",
     "log_out",
+    "delete_user",
     "help",
-
-/* The following are file management commands */
+  /* The following are file management commands */
     "make_dir",
     "make_file",
     "del_dir",
@@ -45,17 +47,18 @@ vector<string> operation_list{
 
     "show_content",
     "change_path"
-
-
 };
 
-map<string, string> operation_syntax{
+map<string, string> operation_syntax{ // the syntax for all operations
     {"help", "help"},
     {"create_user", "create_user (user name) (password)"},
+    {"delete_user", "delete_user (user name)"},
+    {"change_user", "change_user"},
     {"log_in", "log_in (user_name) (password)"},
     {"log_out", "log_out"},
+    {"ls_u", "ls_u"},
+    {"ls_lu", "ls_lu"},
     {"exit", "exit"},
-
     {"make_dir", "make_dir (name)"},
     {"make_file", "make_file (name)"},
     {"del_dir", "del_dir (name)"},
@@ -66,14 +69,17 @@ map<string, string> operation_syntax{
     {"move","move (name/path1) to (name/path2) "},
     {"show_content", "show_content"},
     {"change_path", "change_path (name)"}
-
 };
 
-map<string, string> operation_description{
+map<string, string> operation_description{ // the function description of all operations
     {"help", "See description and syntax for all operations."},
     {"create_user", "Create a new user."},
+    {"delete_user", "Delete a user."},
+    {"change_user", "Go back to the select user panel without logging out from the current user."},
     {"log_in", "Log in with the identity of a user."},
     {"log_out", "Log out from the current user."},
+    {"ls_u", "Show all users that exist."},
+    {"ls_lu", "Show all logged in users."},
     {"exit", "Shutdown FakeDos."},
 
     {"make_dir", "Create a new directory under current route."},
@@ -88,7 +94,6 @@ map<string, string> operation_description{
     {"change_path", "Change current path to a specific directory. "
         "You can go to upper class directory by entering 'u', "
         "and go to root directory by entering 'rt'."}
-
 };
 
 vector<string> user_name;
@@ -102,6 +107,8 @@ map<string, string> user_route;
 bool exitable = false;
 
 bool is_logged_in = false;
+
+vector<string> logged_in_users;
 
 vector<string> command_split(string command) {
 
@@ -208,7 +215,6 @@ void help() {
 
 void exit() {
     cout << "System shutting down..." << endl << "See you next time!" << endl;
-    write_users();
 }
 
 void fakeDos() { // fakeDos main process
@@ -250,7 +256,7 @@ void fakeDos() { // fakeDos main process
         vector<string> command_splited = command_split(command); // split the command by blank space
         string operation = command_splited[0];
 
-        vector<string>::iterator it = find(operation_list.begin(), operation_list.end(), operation);
+        vector<string>::iterator it = find(operation_list.begin(), operation_list.end(), operation); // see if the command exists
 
         /*
         //Debug
@@ -266,18 +272,37 @@ void fakeDos() { // fakeDos main process
             }
 
             if (operation == "create_user") {
-                create_user(command_splited, user_name, user_password, user_route, fakeDosFolderPath);
+                create_user(command_splited, user_name, user_password, fakeDosFolderPath);
+                write_users();
+            }
+
+            if (operation == "delete_user") {
+                delete_user(command_splited, user_name, user_password, fakeDosFolderPath, logged_in_users);
+                write_users();
+            }
+
+            if (operation == "change_user") {
+                change_user(is_logged_in);
             }
 
             if (operation == "log_out") {
-                log_out(is_logged_in);
+                log_out(is_logged_in, current_user, logged_in_users);
             }
 
             if (operation == "log_in") {
-                log_in(command_splited, user_name, user_password, user_route, is_logged_in, current_user, current_path);
+                log_in(command_splited, user_name, user_password, is_logged_in, current_user, current_path, logged_in_users);
+            }
+
+            if (operation == "ls_lu") {
+                ls_lu(logged_in_users);
+            }
+
+            if (operation == "ls_u") {
+                ls_u(user_name);
             }
 
             if (operation == "exit") {
+                write_users();
                 exit();
                 exitable = true;
                 break;
