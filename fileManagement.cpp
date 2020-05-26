@@ -7,7 +7,6 @@
 #include <fstream>
 
 
-
 // Change a virtual route (e.g: root:\users\xxx) to a real route
 string route_formating(string fakeDosFolderPath, string str){
     if (str == "root") return fakeDosFolderPath;
@@ -64,14 +63,11 @@ void show_content(string fakeDosFolderPath, string current_user, map<string, str
 }
 
 
-
 void make_dir(string name, string fakeDosFolderPath, string &current_user,map<string, string> &user_route){
 
     string current_route;
 
     current_route = route_formating(fakeDosFolderPath, user_route[current_user]);
-
-    cout << "current: "<<current_route<<endl;
 
     string command1 = "cd "+ current_route;
     string command2 = "mkdir "+name;
@@ -106,37 +102,6 @@ void make_file(string name,string fakeDosFolderPath, string &current_user,
 }
 
 
-
-/*
-// 在当前目录下依据名称创建txt文件
-void make_file(string name,string fakeDosFolderPath, string &current_user,map<string, string> &user_route){
-    ifstream infile;
-    ofstream outfile;
-    string current_route;
-    string target_route;
-
-    if (user_route[current_user] == "(root)"){
-        current_route = fakeDosFolderPath;
-    }else {
-        current_route = fakeDosFolderPath+"\\"+user_route[current_user];
-    }
-    target_route = current_route + "\\" + name + ".txt";
-
-    infile.open(target_route);
-    if (!infile.fail()){
-        cout << "Error: File already exists, please change another name."<<endl<<endl;
-        infile.close();
-    } else{
-        infile.close();
-        outfile.open(target_route);
-        outfile.close();
-        cout << "Successfully create text file "<< name
-             << " under "<<user_route[current_user]<<"."<<endl<<endl;
-    }
-
-}
-*/
-
 string upper_route(string &current_route){
     int len = current_route.length();
     for (int i = len-1; i>=0 ; i--){
@@ -150,7 +115,7 @@ string upper_route(string &current_route){
     return "root";
 }
 
-// 改成开头为 "root"
+// 开头为 "root"
 bool isPath(string &str){
     if (str.find("root") == 0) return true;
     return false;
@@ -187,56 +152,9 @@ void change_path(string name, string fakeDosFolderPath,
                 return;
             }
         }
-
     }
     write_users();
 }
-
-/*
-void change_path(string name, string fakeDosFolderPath,
-                 string current_user, map<string, string> &user_route){
-    string target_path;
-
-    if (name == "u"){
-        user_route[current_user] = upper_route(user_route[current_user]);
-    } else if (name == "rt"){
-        user_route[current_user] = "root";
-    } else {
-        if (user_route[current_user] == "root"){
-            target_path = fakeDosFolderPath+ "\\" + name;
-
-            if (_access(target_path.c_str(),0)== -1){
-                cout << "Error: Directory doesn't exist."<<endl;
-                return;
-            }else{
-                user_route[current_user] = name;
-            }
-
-        }else{
-            vector<string> fileNames = getFiles(fakeDosFolderPath + "\\*");
-
-            if (isPath(name) || (find(fileNames, name))){
-                target_path = fakeDosFolderPath + "\\" + name;
-            }else {
-                target_path = fakeDosFolderPath+ "\\" + user_route[current_user] + "\\"+ name;
-            }
-
-            if (_access(target_path.c_str(),0)== -1){
-                cout << "Error: Directory doesn't exist."<<endl;
-                return;
-            }else{
-                if (isPath(name) || (find(fileNames, name))){
-                    user_route[current_user] = name;
-                }else{
-                    user_route[current_user] = user_route[current_user] + "\\"+ name;
-                }
-            }
-        }
-    }
-
-    write_users();
-}
-*/
 
 
 // 添加错误input handling
@@ -309,6 +227,10 @@ void copy(string this_name, string target_name, string fakeDosFolderPath,
 
 void move(string this_name, string target_name, string fakeDosFolderPath,
               string current_user, map<string, string> &user_route){
+
+    cout << "Enter move()"<<endl;
+
+
     string current_route, target_path;
 
     current_route = route_formating(fakeDosFolderPath, user_route[current_user]);
