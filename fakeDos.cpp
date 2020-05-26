@@ -22,7 +22,7 @@ string fakeDosFolderPath;
 //string systemFolderPath;
 string usersFilePath;
 
-vector<string> operation_list{
+vector<string> operation_list{ // the list of all available operations
     "exit",
     "create_user",
     "log_in",
@@ -34,7 +34,7 @@ vector<string> operation_list{
     "help"
 };
 
-map<string, string> operation_syntax{
+map<string, string> operation_syntax{ // the syntax for all operations
     {"help", "help"},
     {"create_user", "create_user (user name) (password)"},
     {"delete_user", "delete_user (user name)"},
@@ -46,7 +46,7 @@ map<string, string> operation_syntax{
     {"exit", "exit"}
 };
 
-map<string, string> operation_description{
+map<string, string> operation_description{ // the function description of all operations
     {"help", "See description and syntax for all operations."},
     {"create_user", "Create a new user."},
     {"delete_user", "Delete a user."},
@@ -189,7 +189,7 @@ void fakeDos() { // fakeDos main process
         vector<string> command_splited = command_split(command); // split the command by blank space
         string operation = command_splited[0];
 
-        vector<string>::iterator it = find(operation_list.begin(), operation_list.end(), operation);
+        vector<string>::iterator it = find(operation_list.begin(), operation_list.end(), operation); // see if the command exists
 
         /*
         //Debug
