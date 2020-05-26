@@ -26,24 +26,35 @@ vector<string> operation_list{
     "exit",
     "create_user",
     "log_in",
-//    "delete_user",
+    "change_user",
+    "ls_u",
+    "ls_lu",
     "log_out",
+    "delete_user",
     "help"
 };
 
 map<string, string> operation_syntax{
     {"help", "help"},
     {"create_user", "create_user (user name) (password)"},
+    {"delete_user", "delete_user (user name)"},
+    {"change_user", "change_user"},
     {"log_in", "log_in (user_name) (password)"},
     {"log_out", "log_out"},
+    {"ls_u", "ls_u"},
+    {"ls_lu", "ls_lu"},
     {"exit", "exit"}
 };
 
 map<string, string> operation_description{
     {"help", "See description and syntax for all operations."},
     {"create_user", "Create a new user."},
+    {"delete_user", "Delete a user."},
+    {"change_user", "Go back to the select user panel without logging out from the current user."},
     {"log_in", "Log in with the identity of a user."},
     {"log_out", "Log out from the current user."},
+    {"ls_u", "Show all users that exist."},
+    {"ls_lu", "Show all logged in users."},
     {"exit", "Shutdown FakeDos."}
 };
 
@@ -56,6 +67,8 @@ map<string, string> user_route;
 bool exitable = false;
 
 bool is_logged_in = false;
+
+vector<string> logged_in_users;
 
 vector<string> command_split(string command) {
 
@@ -142,7 +155,6 @@ void help() {
 
 void exit() {
     cout << "System shutting down..." << endl << "See you next time!" << endl;
-    write_users();
 }
 
 void fakeDos() { // fakeDos main process
@@ -194,17 +206,36 @@ void fakeDos() { // fakeDos main process
 
             if (operation == "create_user") {
                 create_user(command_splited, user_name, user_password, fakeDosFolderPath);
+                write_users();
+            }
+
+            if (operation == "delete_user") {
+                delete_user(command_splited, user_name, user_password, fakeDosFolderPath, logged_in_users);
+                write_users();
+            }
+
+            if (operation == "change_user") {
+                change_user(is_logged_in);
             }
 
             if (operation == "log_out") {
-                log_out(is_logged_in);
+                log_out(is_logged_in, current_user, logged_in_users);
             }
 
             if (operation == "log_in") {
-                log_in(command_splited, user_name, user_password, is_logged_in, current_user, current_path);
+                log_in(command_splited, user_name, user_password, is_logged_in, current_user, current_path, logged_in_users);
+            }
+
+            if (operation == "ls_lu") {
+                ls_lu(logged_in_users);
+            }
+
+            if (operation == "ls_u") {
+                ls_u(user_name);
             }
 
             if (operation == "exit") {
+                write_users();
                 exit();
                 exitable = true;
                 break;
