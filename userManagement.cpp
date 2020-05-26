@@ -8,6 +8,7 @@
 #include <io.h>
 #include <direct.h>
 #include <userManagement.h>
+#include "fakeDos.h"
 using namespace std;
 
 //缺少对用户所在目录的管制
@@ -25,6 +26,10 @@ void create_user(vector<string> command_splited, vector<string> & user_name, map
 
             user_name.push_back(username);
             user_password[username] = password;
+
+            string userRoute = "users\\"+username;
+            user_route[username] = userRoute;
+
             _mkdir((fakeDosFolderPath + "\\users\\" + username).c_str());
 
             // Debug
@@ -37,6 +42,8 @@ void create_user(vector<string> command_splited, vector<string> & user_name, map
             cout << "\tUser information:" << endl;
             cout << "\tUser name: " << username << endl;
             cout << "\tPassword: " << password << endl;
+
+            write_users();
 
         } else {
             cout << "Error: user name " << username << " already exists. Try another one." << endl;
@@ -97,7 +104,6 @@ void change_user(bool & is_logged_in) {
 
 //缺少对用户目录的控制
 void log_in(vector<string> command_splited, vector<string> user_name, map<string, string> user_password, bool & is_logged_in, string & current_user, string & current_path, vector<string> & logged_in_users) {
-
     if (is_logged_in) {
         cout << "Error: you have already logged in!" << endl;
     } else {
@@ -122,7 +128,7 @@ void log_in(vector<string> command_splited, vector<string> user_name, map<string
                     }
 
                     current_user = username;
-                    current_path = "users\\" + username;
+                    current_path = user_route[username];
                 } else {
                     cout << "Error: incorrent password." << endl;
                 }

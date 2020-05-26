@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         dist/jsoncpp.cpp \
         fakeDos.cpp \
+        fileManagement.cpp \
         main.cpp \
         userManagement.cpp
 
@@ -29,4 +30,5 @@ HEADERS += \
     dist/json/json-forwards.h \
     dist/json/json.h \
     fakeDos.h \
+    fileManagement.h \
     userManagement.h
