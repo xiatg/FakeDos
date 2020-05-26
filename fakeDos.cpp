@@ -31,7 +31,7 @@ vector<string> operation_list{
     "log_out",
     "help",
 
-/* 下面是文件管理指令 */
+/* The following are file management commands */
     "make_dir",
     "make_file",
     "del_dir",
@@ -55,8 +55,6 @@ map<string, string> operation_syntax{
     {"log_in", "log_in (user_name) (password)"},
     {"log_out", "log_out"},
     {"exit", "exit"},
-
-  /*--------------------*/
 
     {"make_dir", "make_dir (name)"},
     {"make_file", "make_file (name)"},
@@ -126,8 +124,6 @@ void read_users() {
     string line;
     string username;
     bool is_username = true;
-
-    //修改
     bool is_password = false;
     bool is_route = false;
 
@@ -166,17 +162,16 @@ void write_users() {
             ofs.put(username[j]);
         }
         ofs.put('\n');
+
         for (int j = 0; j < int(password.size()); j++) {
             ofs.put(password[j]);
         }
         ofs.put('\n');
 
-        /*----------------------*/
         for (int j = 0; j < int(userRoute.size()); j++) {
             ofs.put(userRoute[j]);
         }
         ofs.put('\n');
-        /*----------------------*/
     }
     ofs.close();
 }
@@ -288,7 +283,7 @@ void fakeDos() { // fakeDos main process
                 break;
             }
 
-            /*---------------------*/
+
             if (operation == "make_dir"){
                 string name = command_splited[1];
                 make_dir(name, fakeDosFolderPath, current_user, user_route);

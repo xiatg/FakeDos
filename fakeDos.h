@@ -22,4 +22,11 @@ void fakeDosPre();
  */
 void fakeDos();
 
+
+/* Read users information from users.txt;
+ * and write in users information if there is any change
+ */
+void read_users();
+void write_users();
+
 #endif // FAKEDOS_H

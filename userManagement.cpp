@@ -8,6 +8,7 @@
 #include <io.h>
 #include <direct.h>
 #include <userManagement.h>
+#include "fakeDos.h"
 using namespace std;
 
 void create_user(vector<string> command_splited, vector<string> & user_name, map<string, string> & user_password,  map<string, string> & user_route, string fakeDosFolderPath) {
@@ -40,6 +41,8 @@ void create_user(vector<string> command_splited, vector<string> & user_name, map
             cout << "\tUser information:" << endl;
             cout << "\tUser name: " << username << endl;
             cout << "\tPassword: " << password << endl;
+
+            write_users();
 
         } else {
             cout << "Error: user name " << username << " already exists. Try another one." << endl;
@@ -83,4 +86,5 @@ void log_in(vector<string> command_splited, vector<string> user_name, map<string
 void log_out(bool & is_logged_in) {
     is_logged_in = false;
     cout << "You have logged out." << endl;
+
 }

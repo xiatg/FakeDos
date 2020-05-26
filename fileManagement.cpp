@@ -1,4 +1,5 @@
 #include "fileManagement.h"
+#include "fakeDos.h"
 #include <unistd.h>
 #include <io.h>
 #include <map>
@@ -66,7 +67,6 @@ void show_content(string fakeDosFolderPath, string current_user, map<string, str
 
 
 
-//暂时只允许用户在当前目录下specify 名称以创建文件夹
 void make_dir(string name, string fakeDosFolderPath, string &current_user,map<string, string> &user_route){
 
     string current_route;
@@ -110,7 +110,7 @@ void make_file(string name,string fakeDosFolderPath, string &current_user,map<st
 }
 
 
-// 暂时只允许change path by name
+
 void change_path(string name, string fakeDosFolderPath,
                  string current_user, map<string, string> &user_route){
     string target_path;
@@ -152,6 +152,7 @@ void change_path(string name, string fakeDosFolderPath,
         }
     }
 
+    write_users();
 }
 
 
