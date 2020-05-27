@@ -23,27 +23,31 @@ void create_user(vector<string> command_splited, vector<string> & user_name, map
 
         if (it == user_name.end()) {
 
-            user_name.push_back(username);
-            user_password[username] = password;
 
-            string userRoute = "root\\users\\"+username;
-            user_route[username] = userRoute;
+            if (username == "NULL") {
+                cout << "Error: you can not use NULL as user name. Try another one." << endl;
+            } else {
+                user_name.push_back(username);
+                user_password[username] = password;
+              
+                string userRoute = "users\\"+username;
+                user_route[username] = userRoute;
 
-            _mkdir((fakeDosFolderPath + "\\users\\" + username).c_str());
+                _mkdir((fakeDosFolderPath + "\\users\\" + username).c_str());
 
-            // Debug
-//            cout << (fakeDosFolderPath + "\\users\\" + username).c_str() << endl;
+                // Debug
+    //            cout << (fakeDosFolderPath + "\\users\\" + username).c_str() << endl;
 
-            system(("cd " + fakeDosFolderPath + "\\users\\" + username + " && " + "mklink /j files " + fakeDosFolderPath + "\\files > nul").c_str());
-            system(("cd " + fakeDosFolderPath + "\\users\\" + username + " && " + "mklink /j system " + fakeDosFolderPath + "\\system > nul").c_str());
+                system(("cd " + fakeDosFolderPath + "\\users\\" + username + " && " + "mklink /j files " + fakeDosFolderPath + "\\files > nul").c_str());
+                system(("cd " + fakeDosFolderPath + "\\users\\" + username + " && " + "mklink /j system " + fakeDosFolderPath + "\\system > nul").c_str());
 
-            cout << "Successfully created the user: " << username << endl;
-            cout << "\tUser information:" << endl;
-            cout << "\tUser name: " << username << endl;
-            cout << "\tPassword: " << password << endl;
+                cout << "Successfully created the user: " << username << endl;
+                cout << "\tUser information:" << endl;
+                cout << "\tUser name: " << username << endl;
+                cout << "\tPassword: " << password << endl;
 
-            write_users();
-
+                write_users();
+            }
         } else {
             cout << "Error: user name " << username << " already exists. Try another one." << endl;
         }
@@ -52,52 +56,57 @@ void create_user(vector<string> command_splited, vector<string> & user_name, map
 }
 
 // 缺少对进程的管制
-void delete_user(vector<string> command_splited, vector<string> & user_name, map<string, string> & user_password, map<string, string> & user_route, string fakeDosFolderPath, vector<string> & logged_in_users) {
+void delete_user(vector<string> command_splited, vector<string> & user_name, map<string, string> & user_password, map<string, string> & user_route, string fakeDosFolderPath, vector<string> & logged_in_users, string current_user) {
     if (command_splited.size() < 2) {
         cout << "Error: Please enter a valid user name." << endl;
         cout << "\tdelete_user (user name)" << endl;
     } else {
         string username = command_splited[1];
 
-        vector<string>::iterator it = find(user_name.begin(), user_name.end(), username);
-
-        if (it != user_name.end()) {
-
-            cout << "Are you sure you want to delete " << username << " ? Enter password to continue:" << endl;
-
-            string password;
-
-            getline(cin, password);
-
-            if (password == user_password[username]) {
-                user_name.erase(it);
-                user_password.erase(username);
-                user_route.erase(username);
-                system(("rmdir /s /Q " + fakeDosFolderPath + "\\users\\" + username).c_str());
-
-                vector<string>::iterator it2 = find(logged_in_users.begin(), logged_in_users.end(), username);
-
-                if (it2 != logged_in_users.end()) {
-                    logged_in_users.erase(it2);
-                }
-
-                cout << "Successfully deleted the user: " << username << endl;
-
-            }
-            else {
-                cout << "Error: incorrent password." << endl;
-            }
+        if (username == current_user) {
+            cout << "Error: you can not delete yourself while logging in." << endl;
         } else {
-            cout << "Error: user name " << username << " does not exist." << endl;
+            vector<string>::iterator it = find(user_name.begin(), user_name.end(), username);
+
+            if (it != user_name.end()) {
+
+                cout << "Are you sure you want to delete " << username << " ? Enter password to continue:" << endl;
+
+                string password;
+
+                getline(cin, password);
+
+                if (password == user_password[username]) {
+                    user_name.erase(it);
+                    user_password.erase(username);
+                    user_route.erase(username);
+                    system(("rmdir /s /Q " + fakeDosFolderPath + "\\users\\" + username).c_str());
+
+                    vector<string>::iterator it2 = find(logged_in_users.begin(), logged_in_users.end(), username);
+
+                    if (it2 != logged_in_users.end()) {
+                        logged_in_users.erase(it2);
+                    }
+
+                    cout << "Successfully deleted the user: " << username << endl;
+
+                }
+                else {
+                    cout << "Error: incorrent password." << endl;
+                }
+            } else {
+                cout << "Error: user name " << username << " does not exist." << endl;
+            }
         }
     }
 }
 
-void change_user(bool & is_logged_in) {
+void change_user(bool & is_logged_in, string & current_user) {
     if (!is_logged_in) {
         cout << "Error: you are already in the user select panel." << endl;
     } else {
         is_logged_in = false;
+        current_user = "NULL";
     }
 }
 
@@ -139,7 +148,7 @@ void log_in(vector<string> command_splited, vector<string> user_name, map<string
 }
 
 // 缺少对进程的管制
-void log_out(bool & is_logged_in, string current_user, vector<string> & logged_in_users) {
+void log_out(bool & is_logged_in, string & current_user, vector<string> & logged_in_users) {
     if (!is_logged_in) {
         cout << "Error: you have not logged in yet." << endl;
     } else {
@@ -147,6 +156,8 @@ void log_out(bool & is_logged_in, string current_user, vector<string> & logged_i
 
         vector<string>::iterator it_liu = find(logged_in_users.begin(), logged_in_users.end(), current_user);
         logged_in_users.erase(it_liu);
+
+        current_user = "NULL";
 
         cout << "You have logged out." << endl;
     }
