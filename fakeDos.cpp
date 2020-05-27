@@ -13,7 +13,7 @@
 #include <fileManagement.h>
 using namespace std;
 
-string current_user;
+string current_user = "NULL";
 string current_path;
 
 string command;
@@ -277,12 +277,12 @@ void fakeDos() { // fakeDos main process
             }
 
             if (operation == "delete_user") {
-                delete_user(command_splited, user_name, user_password, user_route, fakeDosFolderPath, logged_in_users);
+                delete_user(command_splited, user_name, user_password, user_route, fakeDosFolderPath, logged_in_users, current_user);
                 write_users();
             }
 
             if (operation == "change_user") {
-                change_user(is_logged_in);
+                change_user(is_logged_in, current_user);
             }
 
             if (operation == "log_out") {
