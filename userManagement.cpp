@@ -23,12 +23,13 @@ void create_user(vector<string> command_splited, vector<string> & user_name, map
 
         if (it == user_name.end()) {
 
+
             if (username == "NULL") {
                 cout << "Error: you can not use NULL as user name. Try another one." << endl;
             } else {
                 user_name.push_back(username);
                 user_password[username] = password;
-
+              
                 string userRoute = "users\\"+username;
                 user_route[username] = userRoute;
 

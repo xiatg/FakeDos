@@ -65,8 +65,8 @@ map<string, string> operation_syntax{ // the syntax for all operations
     {"del_file", "del_file (name)"},
     {"read", "read (name)"},
     {"write", "write (name)"},
-    {"copy","copy (name/path1) to (name/path2) "},
-    {"move","move (name/path1) to (name/path2) "},
+    {"copy","copy (name1) (name/path2) "},
+    {"move","move (name1) (name/path2) "},
     {"show_content", "show_content"},
     {"change_path", "change_path (name)"}
 };
@@ -83,13 +83,13 @@ map<string, string> operation_description{ // the function description of all op
     {"exit", "Shutdown FakeDos."},
 
     {"make_dir", "Create a new directory under current route."},
-    {"make_file", "Create a new text file under current route."},
+    {"make_file", "Create a new file under current route. User should specify the file type, e.g: .txt"},
     {"del_dir", "Delete a directory under current route."},
-    {"del_file", "Delete a txt file under current route."},
+    {"del_file", "Delete a file under current route. User should specify the file type, e.g: .txt"},
     {"read","Read a text file."},
     {"write", "Write in a text file."},
-    {"copy","Copy file/dir 1 to dir 2. When copying txt file, you need to add (.txt) after its name."},
-    {"move","Move file/dir 1 to dir 2. When moving txt file, you need to add (.txt) after its name."},
+    {"copy","Copy file/dir 1 to dir 2. When copying file, you need to specify its file type."},
+    {"move","Move file/dir 1 to dir 2. When moving file, you need to specify its file type."},
     {"show_content", "Show the content of current directory."},
     {"change_path", "Change current path to a specific directory. "
         "You can go to upper class directory by entering 'u', "
@@ -310,45 +310,80 @@ void fakeDos() { // fakeDos main process
 
 
             if (operation == "make_dir"){
-                string name = command_splited[1];
-                make_dir(name, fakeDosFolderPath, current_user, user_route);
+
+                if (command_splited.size()<2){
+                    cout << "Error: Invalid input syntax."<<endl;
+                } else{
+                    string name = command_splited[1];
+                    make_dir(name, fakeDosFolderPath, current_user, user_route);
+                }
             }
 
             if (operation == "make_file"){
-                string name = command_splited[1];
-                make_file(name,fakeDosFolderPath,current_user,user_route);
+                if (command_splited.size()<2){
+                    cout << "Error: Invalid input syntax."<<endl;
+                } else {
+                    string name = command_splited[1];
+                    make_file(name,fakeDosFolderPath,current_user,user_route);
+                }
             }
 
             if (operation == "del_dir"){
-                string name = command_splited[1];
-                del_dir(name,fakeDosFolderPath, current_user,user_route);
+                if (command_splited.size()<2){
+                    cout << "Error: Invalid input syntax."<<endl;
+                } else {
+                    string name = command_splited[1];
+                    del_dir(name,fakeDosFolderPath, current_user,user_route);
+                }
+
             }
 
             if (operation == "del_file"){
-                string name = command_splited[1];
-                del_file(name,fakeDosFolderPath,current_user,user_route);
+                if (command_splited.size()<2){
+                    cout << "Error: Invalid input syntax."<<endl;
+                } else {
+                    string name = command_splited[1];
+                    del_file(name,fakeDosFolderPath,current_user,user_route);
+                }
+
             }
 
             if (operation == "read"){
-                string name = command_splited[1];
-                read(name,fakeDosFolderPath,current_user,user_route);
+                if (command_splited.size()<2){
+                    cout << "Error: Invalid input syntax."<<endl;
+                } else {
+                    string name = command_splited[1];
+                    read(name,fakeDosFolderPath,current_user,user_route);
+                }
             }
 
             if (operation == "write"){
-                string name = command_splited[1];
-                write(name,fakeDosFolderPath,current_user,user_route);
+                if (command_splited.size()<2){
+                    cout << "Error: Invalid input syntax."<<endl;
+                } else {
+                    string name = command_splited[1];
+                    write(name,fakeDosFolderPath,current_user,user_route);
+                }
             }
 
             if (operation == "copy"){
-                string this_name = command_splited[1];
-                string taregt_name = command_splited[2];
-                copy(this_name,taregt_name,fakeDosFolderPath,current_user,user_route);
+                if (command_splited.size()<3){
+                    cout << "Error: Invalid input syntax."<<endl;
+                } else {
+                    string this_name = command_splited[1];
+                    string taregt_name = command_splited[2];
+                    copy(this_name,taregt_name,fakeDosFolderPath,current_user,user_route);
+                }
             }
 
             if (operation == "move"){
-                string this_name = command_splited[1];
-                string taregt_name = command_splited[2];
-                move(this_name,taregt_name,fakeDosFolderPath,current_user,user_route);
+                if (command_splited.size()<3){
+                    cout << "Error: Invalid input syntax."<<endl;
+                } else {
+                    string this_name = command_splited[1];
+                    string taregt_name = command_splited[2];
+                    move(this_name,taregt_name,fakeDosFolderPath,current_user,user_route);
+                }
             }
 
             if (operation == "show_content"){
@@ -356,8 +391,12 @@ void fakeDos() { // fakeDos main process
             }
 
             if (operation == "change_path"){
-                string name = command_splited[1];
-                change_path(name,fakeDosFolderPath,current_user,user_route);
+                if (command_splited.size()<2){
+                    cout << "Error: Invalid input syntax."<<endl;
+                } else {
+                    string name = command_splited[1];
+                    change_path(name,fakeDosFolderPath,current_user,user_route);
+                }
             }
 
 
