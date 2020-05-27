@@ -228,9 +228,6 @@ void copy(string this_name, string target_name, string fakeDosFolderPath,
 void move(string this_name, string target_name, string fakeDosFolderPath,
               string current_user, map<string, string> &user_route){
 
-    cout << "Enter move()"<<endl;
-
-
     string current_route, target_path;
 
     current_route = route_formating(fakeDosFolderPath, user_route[current_user]);
