@@ -83,8 +83,7 @@
 
 //void user_mem_free(string & current_user){
 //    Json::Reader reader;
-//    Json::Value root, user, taskid;
-    
+//    Json::Value root, user, taskid;  
 //    if (reader.parse(jsonmem, root)){
 //        int index;
 //        for (int i = 0; i < user.size(); i++){
