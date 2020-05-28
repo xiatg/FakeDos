@@ -24,6 +24,6 @@ void user_mem_free(std::string & current_user);
 
 void task_mem_free(int taskid);
 
-bool limit_check(std::vector<string> user_name, int mem)
+bool limit_check(std::vector<std::string> user_name, int mem);
 
 #endif 

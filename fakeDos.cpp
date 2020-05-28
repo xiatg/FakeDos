@@ -8,9 +8,12 @@
 #include <vector>
 #include <io.h>
 #include <direct.h>
+#include <dist/json/json.h>
 #include <fakeDos.h>
+#include <applications.h>
 #include <userManagement.h>
 #include <fileManagement.h>
+#include <applicationManagement.h>
 using namespace std;
 
 string current_user = "NULL";
@@ -46,7 +49,15 @@ vector<string> operation_list{ // the list of all available operations
     "move",
 
     "show_content",
-    "change_path"
+    "change_path",
+
+    "run",
+    "wakeup",
+    "ls_t",
+    "ls_m",
+
+    "install",
+    "appstore"
 };
 
 map<string, string> operation_syntax{ // the syntax for all operations
@@ -68,7 +79,13 @@ map<string, string> operation_syntax{ // the syntax for all operations
     {"copy","copy (name1) (name/path2) "},
     {"move","move (name1) (name/path2) "},
     {"show_content", "show_content"},
-    {"change_path", "change_path (name)"}
+    {"change_path", "change_path (name)"},
+    {"run", "run (app name).app"},
+    {"wakeup", "wakeup (task id)"},
+    {"ls_t", "ls_t"},
+    {"ls_m", "ls_m"},
+    {"install", "install (app name)"},
+    {"appstore", "appstore"}
 };
 
 map<string, string> operation_description{ // the function description of all operations
@@ -93,7 +110,23 @@ map<string, string> operation_description{ // the function description of all op
     {"show_content", "Show the content of current directory."},
     {"change_path", "Change current path to a specific directory. "
         "You can go to upper class directory by entering 'u', "
-        "and go to root directory by entering 'rt\'."}
+        "and go to root directory by entering 'rt\'."},
+
+    {"run", "Run apps."},
+    {"wakeup", "Wake up a blocked task"},
+    {"ls_t", "Show the informaiton of all tasks."},
+    {"ls_m", "Show the status of memory."},
+
+    {"install", "Install the specific app under the current directory."},
+    {"appstore", "Go to App Store and see all available apps."}
+};
+
+vector<string> app_list{
+    "addition"
+};
+
+map<string, string> app_description{
+    {"addition", "A calculator that helps you calculate addition."}
 };
 
 vector<string> user_name;
@@ -308,7 +341,6 @@ void fakeDos() { // fakeDos main process
                 break;
             }
 
-
             if (operation == "make_dir"){
 
                 if (command_splited.size()<2){
@@ -399,6 +431,34 @@ void fakeDos() { // fakeDos main process
                 }
             }
 
+            if (operation == "run") {
+
+            }
+
+            if (operation == "wakeup") {
+
+            }
+
+            if (operation == "appstore") {
+                show_apps(app_list, app_description);
+            }
+
+            if (operation == "install") {
+                if (command_splited.size() < 2) {
+                    cout << "Error: Invalid input syntax." << endl;
+                } else {
+                    string appname = command_splited[1];
+                    install(appname, app_list, fakeDosFolderPath, current_user, user_route);
+                }
+            }
+
+            if (operation == "ls_t") {
+
+            }
+
+            if (operation == "ls_m") {
+
+            }
 
         } else {
             cout << "Invalid command: " << operation << endl;

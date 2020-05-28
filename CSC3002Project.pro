@@ -15,11 +15,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        applicationManagement.cpp \
         applications.cpp \
         dist/jsoncpp.cpp \
         fakeDos.cpp \
         fileManagement.cpp \
         main.cpp \
+        mem.cpp \
+        task_management.cpp \
         userManagement.cpp
 
 # Default rules for deployment.
@@ -28,8 +31,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    Task_management.h \
+    applicationManagement.h \
+    applications.h \
     dist/json/json-forwards.h \
     dist/json/json.h \
     fakeDos.h \
     fileManagement.h \
+    mem.h \
     userManagement.h
