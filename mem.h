@@ -17,8 +17,14 @@ void init_mem();
 
 void user_mem_alloc(std::string & current_user);
 
+void task_mem(int taskid, int taskmem);
+
 template <typename ValueType>
-void task_mem_alloc(int taskid, int memusage, ValueType Args);
+bool task_data_write(int taskid, int taskmem);
+
+template <typename ValueType>
+ValueType task_data_read(int taskid, std::string key);
+
 
 void user_mem_free(std::string & current_user);
 
