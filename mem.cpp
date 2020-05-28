@@ -64,7 +64,7 @@ void task_mem_alloc(int taskid, int memusage, ValueType Args){
 
     if (reader.parse(jsonmem, root)){
         if (!root.isMember(id)){
-            root[to_string(id)] = task;
+            root[id] = task;
             mem["memusage"] = memusage;
             task.append(mem);
         root["loginuser"][current_user] = root["loginuser"][current_user].asInt() + 16;
