@@ -34,11 +34,11 @@ string fakeDosFolderPath;
 //string systemFolderPath;
 string usersFilePath;
 
-vector<PCB_type> runningQueue;
-vector<PCB_type> blockQueue;
-vector<PCB_type> readyQueue;
+//vector<PCB_type> runningQueue;
+//vector<PCB_type> blockQueue;
+//vector<PCB_type> readyQueue;
 
-struct PCB_type mem[100]; //a list stands for memory
+//struct PCB_type mem[100]; //a list stands for memory
 
 
 vector<string> operation_list{ // the list of all available operations
@@ -137,7 +137,6 @@ map<string, string> operation_description{ // the function description of all op
         "and go to root directory by entering 'rt\'."},
 
     {"run", "Run apps."},
-    {"wakeup", "Wake up a blocked task"},
     {"ls_t", "Show the informaiton of all tasks."},
     {"ls_m", "Show the status of memory."},
 
