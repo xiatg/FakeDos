@@ -48,16 +48,16 @@ void task_mem(int taskid, int taskmem, string username, string jsonmem){
 }
 
 template <typename ValueType>
-bool task_data_write(int taskid, string key, ValueType value, string jsonmem){
+bool task_data_write(int taskid, string key, ValueType value, vector <string> user_name, string jsonmem){
     Json::Reader reader;
     Json::Value root;
 
     string id = to_string(taskid);
     int datamem = sizeof(value);
-    if (limit_check(datamem)) return false;
+    if (limit_check(datamem, user_name, jsonmem)) return false;
     if (reader.parse(jsonmem, root)){
         root[id][key] = value;
-        task_mem(taskid, datamem);
+        task_mem(taskid, datamem, jsonmem);
     }
     jsonmem = root.toStyledString(); 
     return true;
