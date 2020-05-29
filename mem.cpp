@@ -10,13 +10,7 @@
 #include <sstream>
 using namespace std;
 
-string current_user;
-int mem_capacity = 0xFFFF;
-string jsonmem;
-vector<string> user_name;
-
-void init_mem(){
-    Json::StyledStreamWriter writer;
+void init_mem(string jsonmem){
     Json::Value root, user, taskmem;
 
     root["user"] = user;
@@ -25,23 +19,17 @@ void init_mem(){
     jsonmem = root.toStyledString(); 
 }
 
-void user_mem_alloc(string username){
+void user_mem_alloc(string username, string jsonmem){
     Json::Reader reader;
     Json::Value root;
     
     if (reader.parse(jsonmem, root)){
-        if (get_userid(username) != -1){
-            root["user"][username] = 0x1000;
-        }
-        else{
-            root["user"][username] = 0x1000;  //  0x1000 represent OS memory usage
-        }
-        
+        root["user"][username] = 0x1000;  //  0x1000 represent OS memory usage
     }
     jsonmem = root.toStyledString(); 
 }
 
-void task_mem(int taskid, int taskmem){
+void task_mem(int taskid, int taskmem, string username, string jsonmem){
     Json::Reader reader;
     Json::Value root;
 
@@ -54,13 +42,13 @@ void task_mem(int taskid, int taskmem){
         else {
             root["taskmem"][id] = root["taskmem"][id].asInt() + taskmem;
         }
-        root["user"][current_user] = root["user"][current_user].asInt() + taskmem;
+        root["user"][username] = root["user"][username].asInt() + taskmem;
     }
     jsonmem = root.toStyledString(); 
 }
 
 template <typename ValueType>
-bool task_data_write(int taskid, string key, ValueType value){
+bool task_data_write(int taskid, string key, ValueType value, string jsonmem){
     Json::Reader reader;
     Json::Value root;
 
@@ -76,7 +64,7 @@ bool task_data_write(int taskid, string key, ValueType value){
 }
 
 template <typename ValueType>
-ValueType task_data_read(int taskid, string key){
+ValueType task_data_read(int taskid, string key, string jsonmem){
     Json::Reader reader;
     Json::Value root;
 
@@ -88,7 +76,7 @@ ValueType task_data_read(int taskid, string key){
 }
 
 
-void user_mem_free(string username){
+void user_mem_free(string username, string jsonmem){
     Json::Reader reader;
     Json::Value root, user;
     
@@ -105,7 +93,7 @@ void user_mem_free(string username){
     
 }
 
-void task_mem_free(int taskid){
+void task_mem_free(int taskid, string username, string jsonmem){
     Json::Reader reader;
     Json::Value root;
     string id = to_string(taskid);
@@ -114,12 +102,12 @@ void task_mem_free(int taskid){
         root.removeMember(id);
         int mem = root["taskmem"][id].asInt();
         root["taskmem"][id] = 0;
-        root["user"][current_user] = root["user"][current_user].asInt() - mem;
+        root["user"][username] = root["user"][username].asInt() - mem;
     }   
     jsonmem = root.toStyledString();
 }
 
-bool limit_check(int mem){
+bool limit_check(int mem, vector <string> user_name, string jsonmem){
     Json::Reader reader;
     Json::Value root;
 
@@ -129,12 +117,12 @@ bool limit_check(int mem){
             usage += root["user"][user_name[i]].asInt();
         }
     }
-    if ((usage + mem) >= mem_capacity){
+    if ((usage + mem) >= 0xFFFF){
         return false;
     }else return true;
 }
 
-int get_task_mem(int taskid){
+int get_task_mem(int taskid, string jsonmem){
     Json::Reader reader;
     Json::Value root;
     // cout << jsonmem;
@@ -144,7 +132,7 @@ int get_task_mem(int taskid){
     }
 }
 
-int get_user_mem(string username){
+int get_user_mem(string username, string jsonmem){
     Json::Reader reader;
     Json::Value root;
     // cout << jsonmem;
