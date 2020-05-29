@@ -20,7 +20,7 @@ void user_mem_alloc(std::string username, std::string jsonmem);
 void task_mem(int taskid, int taskmem, std::string username, std::string jsonmem);
 
 template <typename ValueType>
-bool task_data_write(int taskid, std::string key, ValueType value, std::string jsonmem);
+bool task_data_write(int taskid, std::string key, ValueType value, std::vector<std::string> user_name, std::string jsonmem);
 
 template <typename ValueType>
 ValueType task_data_read(int taskid, std::string key, std::string jsonmem);
