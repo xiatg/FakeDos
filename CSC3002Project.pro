@@ -15,6 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        app_TextEditor.cpp \
         applicationManagement.cpp \
         applications.cpp \
         dist/jsoncpp.cpp \
@@ -32,6 +33,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Task_management.h \
+    app_TextEditor.h \
     applicationManagement.h \
     applications.h \
     dist/json/json-forwards.h \
