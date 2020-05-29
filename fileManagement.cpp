@@ -93,7 +93,7 @@ void make_file(string name,string fakeDosFolderPath, string &current_user,
     current_route = route_formating(fakeDosFolderPath,user_route[current_user]);
 
     string command1 = "cd "+ current_route;
-    string command2 = "cd > "+name;
+    string command2 = "cd .> "+name;
 
     system((command1 + " && " + command2).c_str());
 
@@ -207,7 +207,7 @@ void copy(string this_name, string target_name, string fakeDosFolderPath,
         } else {
             if (isTypeSpecified(this_name)){
                 string command1 = "cd "+ current_route;
-                string command2 = "xcopy "+ this_name + " "+ target_name +" /s /e";
+                string command2 = "xcopy "+ this_name + " "+ target_name;
                 system((command1 + " && "+ command2).c_str());
             } else {//若拷贝文件夹：先切换到目标路径，创建同名文件夹，再执行拷贝
                 string command1 = "cd "+ target_path;

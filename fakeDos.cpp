@@ -14,7 +14,15 @@
 #include <userManagement.h>
 #include <fileManagement.h>
 #include <applicationManagement.h>
+#include <Task_management.h>
 using namespace std;
+
+#define TRUE 1
+#define FALSE 0
+#define NULL 0
+#define RUNNING 1
+#define BLOCK 2
+#define READY 3
 
 string current_user = "NULL";
 string current_path;
@@ -25,6 +33,13 @@ string fakeDosFolderPath;
 //string fileFolderPath;
 //string systemFolderPath;
 string usersFilePath;
+
+vector<PCB_type> runningQueue;
+vector<PCB_type> blockQueue;
+vector<PCB_type> readyQueue;
+
+struct PCB_type mem[100]; //a list stands for memory
+
 
 vector<string> operation_list{ // the list of all available operations
     "exit",
@@ -52,12 +67,17 @@ vector<string> operation_list{ // the list of all available operations
     "change_path",
 
     "run",
-    "wakeup",
     "ls_t",
     "ls_m",
 
     "install",
-    "appstore"
+    "appstore",
+    /* The following are task management commands */
+    "create_task",
+    "display",
+    "wake_up_task",
+    "kill_task"
+
 };
 
 map<string, string> operation_syntax{ // the syntax for all operations
@@ -81,11 +101,15 @@ map<string, string> operation_syntax{ // the syntax for all operations
     {"show_content", "show_content"},
     {"change_path", "change_path (name)"},
     {"run", "run (app name).app"},
-    {"wakeup", "wakeup (task id)"},
     {"ls_t", "ls_t"},
     {"ls_m", "ls_m"},
     {"install", "install (app name)"},
-    {"appstore", "appstore"}
+    {"appstore", "appstore"},
+    {"create_ask","create_task (user name) (app name)"},
+    {"display","display"},
+    {"wake_up_task","wake_up_task (taskID)"},
+    {"kill_task","kill_task (taskID)"}
+
 };
 
 map<string, string> operation_description{ // the function description of all operations
@@ -118,7 +142,13 @@ map<string, string> operation_description{ // the function description of all op
     {"ls_m", "Show the status of memory."},
 
     {"install", "Install the specific app under the current directory."},
-    {"appstore", "Go to App Store and see all available apps."}
+    {"appstore", "Go to App Store and see all available apps."},
+
+    {"create_task","Create a task for a certain user."},
+    {"display","Display the information of task in memory."},
+    {"wake_up_task","Wake up a task to turn it to ready state from block state."},
+    {"kill_task","Kill a task."}
+
 };
 
 vector<string> app_list{
@@ -435,9 +465,6 @@ void fakeDos() { // fakeDos main process
 
             }
 
-            if (operation == "wakeup") {
-
-            }
 
             if (operation == "appstore") {
                 show_apps(app_list, app_description);
@@ -457,6 +484,19 @@ void fakeDos() { // fakeDos main process
             }
 
             if (operation == "ls_m") {
+
+            }
+            if(operation == "create_task")
+            {
+
+            }
+            if(operation == "display"){
+                display();
+            }
+            if (operation == "wake_up_task"){
+
+            }
+            if(operation == "kill"){
 
             }
 
