@@ -22,11 +22,11 @@ struct PCB_type
     int state; /* 0 for not in memory, 1 for running, 2 for hang up */
 };
 
-void create_task(string, string);
+void create_task(string, string,int,string);
 void display();
-void block(int);
-void wake_up(int);
-void kill(int);
+bool block(string,int);
+bool wake_up(string,int);
+bool kill(string,int,string);
 void task_management();
 
 

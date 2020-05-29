@@ -27,7 +27,6 @@ vector<PCB_type> readyQueue;
 
 struct PCB_type mem[100]; //a list stands for memory
 
-
 void task_management()
 {
     if (readyQueue.size() == 0)
@@ -46,7 +45,7 @@ void task_management()
     }
 }
 
-int create_task(string userName, string appName)
+int create_task(string userName, string appName,int mem, string jsonmem)
 {
     int i, j, random_num;
     default_random_engine random;
@@ -58,12 +57,14 @@ int create_task(string userName, string appName)
         {
             random_num = random();
         }
-
     for (i = 0; i < 100; i++)
         if (mem[i].state != NULL)
         {
             usernames.push_back(mem[i].user_name);
         }
+
+    if(limit_check(mem, usernames, jsonmem)){
+
     for (i = 0; i < 100; i++)
         if (mem[i].state == NULL)
             break;
@@ -78,6 +79,12 @@ int create_task(string userName, string appName)
     task_management();
 
     return mem[i].id;
+    }
+
+    else{
+        cout<<"Task creation failed."<<endl;
+        return false;
+    }
 }
 
 void display()
@@ -109,20 +116,20 @@ void display()
     }
 }
 
-void block(int id)
+bool block(string userName, int id)
 {
     int i;
 
     if (runningQueue.empty() && readyQueue.empty() && blockQueue.empty())
     {
         cout << "No task in the memory." << endl;
-        return;
+        return false;
     }
 
     else if (runningQueue.empty() && readyQueue.empty())
     {
         cout << "Every task is blocked." << endl;
-        return;
+        return false;
     }
 
     bool find = 0; //stands for whether task exists in memory
@@ -132,6 +139,12 @@ void block(int id)
         if (id == mem[i].id)
         {
             find = 1;
+
+            if (mem[i].user_name != userName)
+            {
+                cout << "You can only block your task." << endl;
+                return false;
+            }
 
             if (mem[i].state == NULL) //The task is already killed.
                 cout << "The task does not exist." << endl;
@@ -175,22 +188,23 @@ void block(int id)
     }
 
     task_management();
+    return TRUE;
 }
 
-void wake_up(int id)
+bool wake_up(string userName, int id)
 {
     int i;
 
     if (runningQueue.empty() && readyQueue.empty() && blockQueue.empty())
     {
         cout << "No task in the memory." << endl;
-        return;
+        return false;
     }
 
     else if (blockQueue.empty())
     {
         cout << "Every task is either running or ready, no task need to wake up." << endl;
-        return;
+        return false;
     }
 
     bool find = 0; //stands for whether task exists in memory
@@ -200,44 +214,50 @@ void wake_up(int id)
         if (id == mem[i].id)
         {
             find = 1;
-
-            if (mem[i].state == NULL) //The task is already killed.
-                cout << "The task does not exist." << endl;
-
-            else if (mem[i].state != BLOCK) //The task is not blocked.
-                cout << "The task is either running or ready. "
-                        "No need to wake it up."
-                     << endl;
-
-            else //the task is blocked.
+            if (mem[i].user_name != userName)
             {
-                mem[i].state = READY; //The task is waken up.
-                cout << "The task is waken up to ready state." << endl;
-                readyQueue.push_back(mem[i]);
-                vector<PCB_type>::iterator iter;
-                for (iter = blockQueue.begin(); iter != blockQueue.end(); iter++)
+                cout << "You can only wake up your task." << endl;
+                return false;
+
+                if (mem[i].state == NULL) //The task is already killed.
+                    cout << "The task does not exist." << endl;
+
+                else if (mem[i].state != BLOCK) //The task is not blocked.
+                    cout << "The task is either running or ready. "
+                            "No need to wake it up."
+                         << endl;
+
+                else //the task is blocked.
                 {
-                    if (iter->id == mem[i].id)
-                        blockQueue.erase(iter);
+                    mem[i].state = READY; //The task is waken up.
+                    cout << "The task is waken up to ready state." << endl;
+                    readyQueue.push_back(mem[i]);
+                    vector<PCB_type>::iterator iter;
+                    for (iter = blockQueue.begin(); iter != blockQueue.end(); iter++)
+                    {
+                        if (iter->id == mem[i].id)
+                            blockQueue.erase(iter);
+                    }
                 }
             }
         }
+        if (find == 0) //No such tasks in the memory
+        {
+            cout << "You entered a wrong id!" << endl;
+        }
+        task_management();
+        return TRUE;
     }
-    if (find == 0) //No such tasks in the memory
-    {
-        cout << "You entered a wrong id!" << endl;
-    }
-    task_management();
 }
 
-void kill(int id)
+bool kill(string userName, int id,string jsonmem)
 {
     int i;
 
     if (runningQueue.empty() && readyQueue.empty() && blockQueue.empty())
     {
         cout << "No task in the memory." << endl;
-        return;
+        return false;
     }
 
     bool find = 0; //stands for whether task exists in memory
@@ -248,8 +268,17 @@ void kill(int id)
         {
             find = 1;
 
-            if (mem[i].state == NULL) //The task is already killed.
+            if (mem[i].user_name != userName)
+            {
+                cout << "You can only kill your task." << endl;
+                return false;
+            }
+
+            if (mem[i].state == NULL)
+            { //The task is already killed.
                 cout << "The task does not exist." << endl;
+                return false;
+            }
 
             else if (mem[i].state == RUNNING)
             {
@@ -286,7 +315,7 @@ void kill(int id)
                     if (iter->id == mem[i].id)
                         readyQueue.erase(iter);
                 }
-                task_mem_free(id);
+                task_mem_free(id,mem[i].user_name,jsonmem);
             }
 
             break;
@@ -297,6 +326,5 @@ void kill(int id)
         cout << "You entered a wrong id!" << endl;
     }
     task_management();
+    return TRUE;
 }
-
-
