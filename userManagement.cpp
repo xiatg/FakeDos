@@ -110,6 +110,7 @@ void change_user(bool & is_logged_in, string & current_user) {
     }
 }
 
+//缺少对用户内存的管制
 void log_in(vector<string> command_splited, vector<string> user_name, map<string, string> user_password, map<string, string> user_route, bool & is_logged_in, string & current_user, string & current_path, vector<string> & logged_in_users) {
     if (is_logged_in) {
         cout << "Error: you have already logged in!" << endl;
@@ -148,6 +149,7 @@ void log_in(vector<string> command_splited, vector<string> user_name, map<string
 }
 
 // 缺少对进程的管制
+// 缺少对用户内存的管制
 void log_out(bool & is_logged_in, string & current_user, vector<string> & logged_in_users) {
     if (!is_logged_in) {
         cout << "Error: you have not logged in yet." << endl;
