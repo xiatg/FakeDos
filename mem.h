@@ -29,7 +29,7 @@ void user_mem_free(std::string username, std::string jsonmem);
 
 void task_mem_free(int taskid, std::string jsonmem);
 
-bool limit_check(std::vector<string> user_name, int mem, std::string jsonmem);
+bool limit_check(std::vector<std::string> user_name, int mem, std::string jsonmem);
 
 int get_task_mem(int taskid, std::string jsonmem);
 
