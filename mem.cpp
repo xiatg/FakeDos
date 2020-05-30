@@ -53,11 +53,13 @@ bool task_data_write(int taskid, string key, ValueType value, vector <string> us
 
     string id = to_string(taskid);
     int datamem = sizeof(value);
-    if (limit_check(datamem, user_name, jsonmem)) return false;
-    if (reader.parse(jsonmem, root)){
-        root[id][key] = value;
-        task_mem(taskid, datamem, username, jsonmem);
+    if (limit_check(datamem, user_name, jsonmem)){
+        if (reader.parse(jsonmem, root)){
+            root[id][key] = value;
+            task_mem(taskid, datamem, username, jsonmem);
+        }
     }
+    else return false;
     jsonmem = root.toStyledString();
     return true;
 }
@@ -82,13 +84,6 @@ void user_mem_free(string username, string & jsonmem){
         root["user"][username] = 0;
     }
     jsonmem = root.toStyledString();
-    ///////////////////////////////////////////////
-    // need to kill all task memory under this user
-    ///////////////////////////////////////////////
-
-
-
-
 }
 
 void task_mem_free(int taskid, string username, string & jsonmem){
