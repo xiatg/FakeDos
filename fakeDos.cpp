@@ -16,6 +16,7 @@
 #include <applicationManagement.h>
 #include <taskManagement.h>
 #include <mem.h>
+#include <app_TextEditor.h>
 using namespace std;
 
 string current_user = "NULL";
@@ -133,11 +134,13 @@ map<string, string> operation_description{ // the function description of all op
 };
 
 vector<string> app_list{
-    "guessGame.app"
+    "guessGame.app",
+    "textEditor.app"
 };
 
 map<string, string> app_description{
-    {"guessGame.app", "A number guessing game."}
+    {"guessGame.app", "A number guessing game."},
+    {"textEditor.app", "A textEditor."}
 };
 
 vector<string> user_name;
@@ -282,8 +285,9 @@ void run(string appname) {
                       mem, runningQueue, blockQueue, readyQueue);
         }
 
-        if (appname == "addition.app") {
-
+        if (appname == "textEditor.app") {
+            TextEditor(taskid, false, jsonmem, current_user, user_name, mem,
+                       runningQueue, blockQueue, readyQueue);
         }
     }
 }
@@ -517,6 +521,11 @@ void fakeDos() { // fakeDos main process
                             if (appname == "guessGame.app") {
                                 guessGame(stoi(taskid), false, current_user, user_name, jsonmem, mem,
                                           runningQueue, blockQueue, readyQueue);
+                            }
+
+                            if (appname == "textEditor.app") {
+                                TextEditor(stoi(taskid), true, jsonmem, current_user, user_name, mem,
+                                           runningQueue, blockQueue, readyQueue);
                             }
                         }
                     }
