@@ -140,3 +140,7 @@ int get_user_mem(string username, string & jsonmem){
         return root["user"][username].asInt();
     } else return 0;
 }
+
+void display_memory(string & jsonmem) {
+
+}

@@ -78,7 +78,7 @@ void addition(int taskid, bool first_exe) {
     }
 }
 
-void guessGame(int taskid, bool first_exe) {
+void guessGame(int taskid, bool first_exe, string jsonmem) {
     /*data field*/
     int guess, goal, round;
     bool regenerate = true;

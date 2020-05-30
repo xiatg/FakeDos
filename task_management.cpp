@@ -8,7 +8,7 @@ using namespace std;
 #define TRUE 1
 #define FALSE 0
 
-#define NULL 0
+#define EMPTY 0
 #define RUNNING 1
 #define BLOCK 2
 #define READY 3
@@ -58,7 +58,7 @@ int create_task(string userName, string appName, string & jsonmem)
             random_num = random();
         }
     for (i = 0; i < 100; i++)
-        if (mem[i].state != NULL)
+        if (mem[i].state != EMPTY)
         {
             usernames.push_back(mem[i].user_name);
         }
@@ -67,7 +67,7 @@ int create_task(string userName, string appName, string & jsonmem)
     {
 
         for (i = 0; i < 100; i++)
-            if (mem[i].state == NULL)
+            if (mem[i].state == EMPTY)
                 break;
         mem[i].id = random_num;
         mem[i].state = READY;
@@ -148,7 +148,7 @@ bool block(string userName, int id)
                 return false;
             }
 
-            if (mem[i].state == NULL) //The task is already killed.
+            if (mem[i].state == EMPTY) //The task is already killed.
                 cout << "The task does not exist." << endl;
 
             else if (mem[i].state == BLOCK) //The task has been already blocked.
@@ -221,7 +221,7 @@ bool wake_up(string userName, int id)
                 cout << "You can only wake up your task." << endl;
                 return false;
 
-                if (mem[i].state == NULL) //The task is already killed.
+                if (mem[i].state == EMPTY) //The task is already killed.
                     cout << "The task does not exist." << endl;
 
                 else if (mem[i].state != BLOCK) //The task is not blocked.
@@ -276,7 +276,7 @@ bool kill(string userName, int id, string & jsonmem)
                 return false;
             }
 
-            if (mem[i].state == NULL)
+            if (mem[i].state == EMPTY)
             { //The task is already killed.
                 cout << "The task does not exist." << endl;
                 return false;
@@ -284,7 +284,7 @@ bool kill(string userName, int id, string & jsonmem)
 
             else if (mem[i].state == RUNNING)
             {
-                mem[i].state = NULL; //The task is killed.
+                mem[i].state = EMPTY; //The task is killed.
                 cout << "The task is killed." << endl;
                 vector<PCB_type>::iterator iter;
                 for (iter = runningQueue.begin(); iter != runningQueue.end(); iter++)
@@ -296,7 +296,7 @@ bool kill(string userName, int id, string & jsonmem)
 
             else if (mem[i].state == BLOCK)
             {
-                mem[i].state = NULL; //The task is killed.
+                mem[i].state = EMPTY; //The task is killed.
                 cout << "The task is killed." << endl;
                 vector<PCB_type>::iterator iter;
                 for (iter = blockQueue.begin(); iter != blockQueue.end(); iter++)
@@ -309,7 +309,7 @@ bool kill(string userName, int id, string & jsonmem)
 
             else if (mem[i].state == READY)
             {
-                mem[i].state = NULL; //The task is killed.
+                mem[i].state = EMPTY; //The task is killed.
                 cout << "The task is killed." << endl;
                 vector<PCB_type>::iterator iter;
                 for (iter = readyQueue.begin(); iter != readyQueue.end(); iter++)
