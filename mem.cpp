@@ -9,7 +9,7 @@
 #include <sstream>
 using namespace std;
 
-void init_mem(string jsonmem){
+void init_mem(string & jsonmem){
     Json::Value root, user, taskmem;
 
     root["user"] = user;
@@ -53,24 +53,25 @@ bool task_data_write(int taskid, string key, ValueType value, vector <string> us
 
     string id = to_string(taskid);
     int datamem = sizeof(value);
-    if (limit_check(datamem, user_name, jsonmem)) return false;
-    if (reader.parse(jsonmem, root)){
-        root[id][key] = value;
-        task_mem(taskid, datamem, username, jsonmem);
+    if (limit_check(datamem, user_name, jsonmem)){
+        if (reader.parse(jsonmem, root)){
+            root[id][key] = value;
+            task_mem(taskid, datamem, username, jsonmem);
+        }
     }
+    else return false;
     jsonmem = root.toStyledString();
     return true;
 }
 
-template <typename ValueType>
-ValueType task_data_read(int taskid, string key, string & jsonmem){
+string task_data_read(int taskid, string key, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
 
     string id = to_string(taskid);
 
     if (reader.parse(jsonmem, root)){
-        return root[id][key];
+        return root[id][key].asString();
     }
 }
 
@@ -83,13 +84,6 @@ void user_mem_free(string username, string & jsonmem){
         root["user"][username] = 0;
     }
     jsonmem = root.toStyledString();
-    ///////////////////////////////////////////////
-    // need to kill all task memory under this user
-    ///////////////////////////////////////////////
-
-
-
-
 }
 
 void task_mem_free(int taskid, string username, string & jsonmem){
