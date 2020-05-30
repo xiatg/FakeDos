@@ -1,5 +1,4 @@
 
-
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -16,17 +15,17 @@ void init_mem(string jsonmem){
     root["user"] = user;
     root["taskmem"] = taskmem;
 
-    jsonmem = root.toStyledString(); 
+    jsonmem = root.toStyledString();
 }
 
 void user_mem_alloc(string username, string jsonmem){
     Json::Reader reader;
     Json::Value root;
-    
+
     if (reader.parse(jsonmem, root)){
         root["user"][username] = 0x1000;  //  0x1000 represent OS memory usage
     }
-    jsonmem = root.toStyledString(); 
+    jsonmem = root.toStyledString();
 }
 
 void task_mem(int taskid, int taskmem, string username, string jsonmem){
@@ -44,11 +43,11 @@ void task_mem(int taskid, int taskmem, string username, string jsonmem){
         }
         root["user"][username] = root["user"][username].asInt() + taskmem;
     }
-    jsonmem = root.toStyledString(); 
+    jsonmem = root.toStyledString();
 }
 
 template <typename ValueType>
-bool task_data_write(int taskid, string key, ValueType value, vector <string> user_name, string jsonmem){
+bool task_data_write(int taskid, string key, ValueType value, vector <string> user_name, string username, string jsonmem){
     Json::Reader reader;
     Json::Value root;
 
@@ -57,9 +56,9 @@ bool task_data_write(int taskid, string key, ValueType value, vector <string> us
     if (limit_check(datamem, user_name, jsonmem)) return false;
     if (reader.parse(jsonmem, root)){
         root[id][key] = value;
-        task_mem(taskid, datamem, jsonmem);
+        task_mem(taskid, datamem, username, jsonmem);
     }
-    jsonmem = root.toStyledString(); 
+    jsonmem = root.toStyledString();
     return true;
 }
 
@@ -79,7 +78,7 @@ ValueType task_data_read(int taskid, string key, string jsonmem){
 void user_mem_free(string username, string jsonmem){
     Json::Reader reader;
     Json::Value root, user;
-    
+
     if (reader.parse(jsonmem, root)){
         root["user"][username] = 0;
     }
@@ -90,7 +89,7 @@ void user_mem_free(string username, string jsonmem){
 
 
 
-    
+
 }
 
 void task_mem_free(int taskid, string username, string jsonmem){
@@ -103,7 +102,7 @@ void task_mem_free(int taskid, string username, string jsonmem){
         int mem = root["taskmem"][id].asInt();
         root["taskmem"][id] = 0;
         root["user"][username] = root["user"][username].asInt() - mem;
-    }   
+    }
     jsonmem = root.toStyledString();
 }
 
@@ -113,7 +112,7 @@ bool limit_check(int mem, vector <string> user_name, string jsonmem){
 
     int usage = 0;
     if (reader.parse(jsonmem, root)){
-        for (int i = 0; i < root["user"].size(); i++){
+        for (int i = 0; i < int(root["user"].size()); i++){
             usage += root["user"][user_name[i]].asInt();
         }
     }
@@ -129,7 +128,7 @@ int get_task_mem(int taskid, string jsonmem){
 
     if (reader.parse(jsonmem, root)){
         return root["taskmem"][taskid].asInt();
-    }
+    } else return 0;
 }
 
 int get_user_mem(string username, string jsonmem){
@@ -139,5 +138,5 @@ int get_user_mem(string username, string jsonmem){
 
     if (reader.parse(jsonmem, root)){
         return root["user"][username].asInt();
-    }
+    } else return 0;
 }
