@@ -72,7 +72,7 @@ void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vec
             cout << "Task id =" << mem[i].id << " is running." << endl;
             cout << "User name:" << mem[i].user_name << endl;
             cout << "App name:" << mem[i].app_name << endl;
-            cout << "Memory Use:" << get_task_mem(mem[i].id, jsonmem) << endl;
+            cout << "Memory Use:" << get_task_mem(mem[i].id, jsonmem) << "B" << endl;
         }
 
         if (mem[i].state == READY)
@@ -80,7 +80,7 @@ void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vec
             cout << "Task id =" << mem[i].id << " is ready." << endl;
             cout << "User name:" << mem[i].user_name << endl;
             cout << "App name:" << mem[i].app_name << endl;
-            cout << "Memory Use:" << get_task_mem(mem[i].id, jsonmem) << endl;
+            cout << "Memory Use:" << get_task_mem(mem[i].id, jsonmem) << "B" << endl;
         }
 
         if (mem[i].state == BLOCK)
@@ -88,7 +88,7 @@ void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vec
             cout << "Task id =" << mem[i].id << " is blocked." << endl;
             cout << "User name:" << mem[i].user_name << endl;
             cout << "App name:" << mem[i].app_name << endl;
-            cout << "Memory Use:" << get_task_mem(mem[i].id, jsonmem) << endl;
+            cout << "Memory Use:" << get_task_mem(mem[i].id, jsonmem) << "B" << endl;
         }
     }
 
@@ -103,14 +103,14 @@ void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vec
         for (i = 0; i < int(user_name.size()); i++)
         {
             cout << "User name:" << user_name[i] << endl;
-            cout << "Memory Usage:" << get_user_mem(user_name[i], jsonmem) << endl;
+            cout << "Memory Usage:" << get_user_mem(user_name[i], jsonmem) << "B" << endl;
 
             used += get_user_mem(user_name[i], jsonmem);
         }
 
         cout << endl;
 
-        cout << "Used/Total: " << used << "/" << total << endl;
+        cout << "Used/Total: " << used << "B/" << total << "B" << endl;
 
     } else {
 

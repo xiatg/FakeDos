@@ -370,6 +370,16 @@ void fakeDos() { // fakeDos main process
 
             if(operation == "kill"){
 
+                if (command_splited.size() < 2) {
+                    cout << "Error: Invalid input syntax." << endl;
+                } else {
+
+                    string taskid = command_splited[1];
+
+                    kill(current_user, stoi(taskid), jsonmem,
+                         mem, runningQueue, blockQueue, readyQueue);
+                }
+
             }
 
             if(operation == "list_task"){
