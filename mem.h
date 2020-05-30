@@ -15,7 +15,7 @@
 
 
 
-void init_mem();
+void init_mem(std::string & jsonmem);
 
 void user_mem_alloc(std::string username, std::string & jsonmem);
 
