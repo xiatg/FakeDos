@@ -46,23 +46,7 @@ void task_mem(int taskid, int taskmem, string username, string & jsonmem){
     jsonmem = root.toStyledString();
 }
 
-template <typename ValueType>
-bool task_data_write(int taskid, string key, ValueType value, vector <string> user_name, string username, string & jsonmem){
-    Json::Reader reader;
-    Json::Value root;
 
-    string id = to_string(taskid);
-    int datamem = sizeof(value);
-    if (limit_check(datamem, user_name, jsonmem)){
-        if (reader.parse(jsonmem, root)){
-            root[id][key] = value;
-            task_mem(taskid, datamem, username, jsonmem);
-        }
-    }
-    else return false;
-    jsonmem = root.toStyledString();
-    return true;
-}
 
 string task_data_read(int taskid, string key, string & jsonmem){
     Json::Reader reader;
@@ -133,4 +117,21 @@ int get_user_mem(string username, string & jsonmem){
     if (reader.parse(jsonmem, root)){
         return root["user"][username].asInt();
     } else return 0;
+}
+
+bool task_data_write(int taskid, string key, string value, vector <string> user_name, string username, string & jsonmem){
+    Json::Reader reader;
+    Json::Value root;
+
+    string id = to_string(taskid);
+    int datamem = sizeof(value);
+    if (limit_check(datamem, user_name, jsonmem)){
+        if (reader.parse(jsonmem, root)){
+            root[id][key] = value;
+            task_mem(taskid, datamem, username, jsonmem);
+        }
+    }
+    else return false;
+    jsonmem = root.toStyledString();
+    return true;
 }

@@ -20,8 +20,11 @@ void install(string appname,
     if (it == app_list.end()) {
         cout << "Error: app name " << appname << " is not available in the App Store." << endl;
     } else {
-        make_file((appname + ".app"), fakeDosFolderPath, current_user, user_route);
-        cout << "Successfully installed " << appname << ".app ." << endl;
+        make_file(appname, fakeDosFolderPath, current_user, user_route);
+
+//        cout << fakeDosFolderPath << endl << user_route[current_user] << endl;
+
+        cout << "Successfully installed " << appname << " ." << endl;
     }
 }
 

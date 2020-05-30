@@ -108,9 +108,9 @@ void guessGame(int taskid,
         cout << "Type hangon to save the game for later." << endl;
         cout << "Type exit to exit the game." << endl;
 
-        if((!task_data_write(taskid, "guess", guess, user_name, username, jsonmem))
-        || (!task_data_write(taskid, "goal", goal, user_name, username, jsonmem))
-        || (!task_data_write(taskid, "round", round, user_name, username, jsonmem))) {
+        if((!task_data_write(taskid, "guess", to_string(guess), user_name, username, jsonmem))
+        || (!task_data_write(taskid, "goal", to_string(goal), user_name, username, jsonmem))
+        || (!task_data_write(taskid, "round", to_string(round), user_name, username, jsonmem))) {
             cout << "Error: memory overflow. App is terminating." << endl;
             kill(username, taskid, jsonmem, mem, runningQueue, blockQueue, readyQueue);
         }
@@ -172,9 +172,9 @@ void guessGame(int taskid,
         kill(username, taskid, jsonmem, mem, runningQueue, blockQueue, readyQueue);
     } else {
         // save the useful data to memory with the given taskid
-        if((!task_data_write(taskid, "guess", guess, user_name, username, jsonmem))
-        || (!task_data_write(taskid, "goal", goal, user_name, username, jsonmem))
-        || (!task_data_write(taskid, "round", round, user_name, username, jsonmem))) {
+        if((!task_data_write(taskid, "guess", to_string(guess), user_name, username, jsonmem))
+        || (!task_data_write(taskid, "goal", to_string(goal), user_name, username, jsonmem))
+        || (!task_data_write(taskid, "round", to_string(round), user_name, username, jsonmem))) {
             cout << "Error: memory overflow. App is terminating." << endl;
             kill(username, taskid, jsonmem, mem, runningQueue, blockQueue, readyQueue);
         }

@@ -139,7 +139,7 @@ vector<string> app_list{
 
 map<string, string> app_description{
     {"addition.app", "A calculator that helps you calculate addition."},
-    {"guessGame", "A number guessing game."}
+    {"guessGame.app", "A number guessing game."}
 };
 
 vector<string> user_name;

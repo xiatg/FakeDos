@@ -31,7 +31,6 @@ int create_task(string userName, string appName, string & jsonmem, PCB_type (&me
 {
     int i, j, random_num;
     default_random_engine random;
-    vector<string> usernames;
 
     random_num = random();
     for (j = 0; j < 100; j++)
@@ -39,36 +38,22 @@ int create_task(string userName, string appName, string & jsonmem, PCB_type (&me
         {
             random_num = random();
         }
+
     for (i = 0; i < 100; i++)
-        if (mem[i].state != EMPTY)
-        {
-            usernames.push_back(mem[i].user_name);
-        }
+        if (mem[i].state == EMPTY)
+            break;
 
-    if (limit_check(0, usernames, jsonmem))
-    {
+    mem[i].id = random_num;
+    mem[i].state = READY;
+    readyQueue.push_back(mem[i]);
+    mem[i].app_name = appName;
+    mem[i].user_name = userName;
 
-        for (i = 0; i < 100; i++)
-            if (mem[i].state == EMPTY)
-                break;
-        mem[i].id = random_num;
-        mem[i].state = READY;
-        readyQueue.push_back(mem[i]);
-        mem[i].app_name = appName;
-        mem[i].user_name = userName;
+    cout << "The task is created successfully, task id:" << mem[i].id << endl;
+    //print the task id
+    task_management(runningQueue, readyQueue);
 
-        cout << "The task is created successfully, task id:" << mem[i].id << endl;
-        //print the task id
-        task_management(runningQueue, readyQueue);
-
-        return mem[i].id;
-    }
-
-    else
-    {
-        cout << "Task creation failed." << endl;
-        return false;
-    }
+    return mem[i].id;
 }
 
 void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue)
