@@ -23,7 +23,7 @@ SOURCES += \
         fileManagement.cpp \
         main.cpp \
         mem.cpp \
-        task_management.cpp \
+        taskManagement.cpp \
         userManagement.cpp
 
 # Default rules for deployment.
@@ -32,7 +32,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    Task_management.h \
     app_TextEditor.h \
     applicationManagement.h \
     applications.h \
@@ -41,4 +40,5 @@ HEADERS += \
     fakeDos.h \
     fileManagement.h \
     mem.h \
+    taskManagement.h \
     userManagement.h

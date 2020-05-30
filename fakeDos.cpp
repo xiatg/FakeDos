@@ -14,15 +14,9 @@
 #include <userManagement.h>
 #include <fileManagement.h>
 #include <applicationManagement.h>
-#include <Task_management.h>
+#include <taskManagement.h>
+#include <mem.h>
 using namespace std;
-
-#define TRUE 1
-#define FALSE 0
-#define NULL 0
-#define RUNNING 1
-#define BLOCK 2
-#define READY 3
 
 string current_user = "NULL";
 string current_path;
@@ -30,8 +24,6 @@ string current_path;
 string command;
 
 string fakeDosFolderPath;
-//string fileFolderPath;
-//string systemFolderPath;
 string usersFilePath;
 
 string jsonmem;
@@ -78,7 +70,6 @@ vector<string> operation_list{ // the list of all available operations
     "kill_task"
 
 };
-
 
 map<string, string> operation_syntax{ // the syntax for all operations
     {"help", "help"},
@@ -163,8 +154,6 @@ vector<string> user_name;
 map<string, string> user_password;
 
 map<string, string> user_route;
-
-
 
 bool exitable = false;
 
@@ -489,8 +478,8 @@ void fakeDos() { // fakeDos main process
             {
 
             }
-            if(operation == "display"){
-                display();
+            if(operation == "list_task"){
+                display(user_name, jsonmem);
             }
             if (operation == "wake_up_task"){
 
