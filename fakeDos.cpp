@@ -51,7 +51,8 @@ vector<string> operation_list{ // the list of all available operations
     "log_out",
     "delete_user",
     "help",
-  /* The following are file management commands */
+
+ // File management commands
     "make_dir",
     "make_file",
     "del_dir",
@@ -66,19 +67,23 @@ vector<string> operation_list{ // the list of all available operations
     "show_content",
     "change_path",
 
+ //
     "run",
     "ls_t",
     "ls_m",
 
+ // App management commands
     "install",
     "appstore",
-    /* The following are task management commands */
+
+ // Task management commands
     "create_task",
     "display",
     "wake_up_task",
     "kill_task"
 
 };
+
 
 map<string, string> operation_syntax{ // the syntax for all operations
     {"help", "help"},
@@ -133,7 +138,7 @@ map<string, string> operation_description{ // the function description of all op
     {"move","Move file/dir 1 to dir 2. When moving file, you need to specify its file type."},
     {"show_content", "Show the content of current directory."},
     {"change_path", "Change current path to a specific directory. "
-        "You can go to upper class directory by entering 'u', "
+        "You can go to upper-level directory by entering 'u', "
         "and go to root directory by entering 'rt\'."},
 
     {"run", "Run apps."},

@@ -94,6 +94,11 @@ void editorHelp(){
     cout << "|                   Commands for text editor                   |"<< endl;
     cout << "+--------------------------------------------------------------+"<<endl;
 
+    cout << "|"<< right << setw(7)<<" "<< left<<
+            setw(55)<< " (Following commands are case-insensitive) "<<"|"<<endl;
+
+    cout << "|"<< right << setw(7)<<" "<< left<< setw(55)<< " "<<"|"<<endl;
+
     cout << "|"<< right << setw(7)<<"Itext:"<< left<<
             setw(55)<< " Inserts the text following 'I' into the buffer "<<"|"<<endl;
 
