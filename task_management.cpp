@@ -45,7 +45,7 @@ void task_management()
     }
 }
 
-int create_task(string userName, string appName, string jsonmem)
+int create_task(string userName, string appName, string & jsonmem)
 {
     int i, j, random_num;
     default_random_engine random;
@@ -252,7 +252,7 @@ bool wake_up(string userName, int id)
     }
 }
 
-bool kill(string userName, int id, string jsonmem)
+bool kill(string userName, int id, string & jsonmem)
 {
     int i;
 
