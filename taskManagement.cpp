@@ -323,7 +323,7 @@ bool kill(string userName,
                     }
 
                 }
-                //task_mem_free(id);
+                task_mem_free(id, mem[i].user_name, jsonmem);
             }
 
             else if (mem[i].state == READY)
