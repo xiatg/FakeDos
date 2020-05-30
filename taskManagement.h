@@ -16,7 +16,6 @@ struct PCB_type
     int id;
     string user_name;
     string app_name;
-    void *addr;
     int state; /* 0 for not in memory, 1 for running, 2 for hang up */
 };
 

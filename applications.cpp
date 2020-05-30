@@ -14,72 +14,6 @@ bool is_number(string s) {
     return !s.empty() && it == s.end();
 }
 
-void addition(int taskid, bool first_exe) {
-    /*data field*/
-    int a, b;
-    bool ae = false, be = false;
-
-    /*retrieve data*/
-    if (!first_exe) {
-        // retrieve the data with the given taskid
-    }
-
-    /*main process*/
-    bool kill = false;
-    string command;
-    while (true) {
-
-        if (!ae) {
-            cout << "a = ";
-            cin >> command;
-
-            if (command == "exit") {
-                kill = true;
-                break;
-            }
-            else
-            {
-                if (command == "hangon") {
-                    break;
-                }
-                else
-                {
-                    a = stoi(command);
-                    ae = true;
-                }
-            }
-        }
-
-        if (!be) {
-            cout << "b = ";
-            cin >> command;
-
-            if (command == "exit") {
-                kill = true;
-                break;
-            } else {
-                if (command == "hangon") {
-                    break;
-                } else {
-                    b = stoi(command);
-                    be = true;
-                }
-            }
-        }
-
-        cout << "c = " << a+b << endl;
-        ae = false;
-        be = false;
-    }
-
-    /*exit part*/
-    if (kill) {
-        // kill the task with the given taskid
-    } else {
-        // save the useful data to memory with the given taskid
-    }
-}
-
 void guessGame(int taskid,
                bool first_exe,
                string username,
@@ -99,7 +33,7 @@ void guessGame(int taskid,
         // retrieve the data with the given taskid
         guess = stoi(task_data_read(taskid, "guess", jsonmem));
         goal = stoi(task_data_read(taskid, "goal", jsonmem));
-        round = stoi(task_data_read(taskid, "guess", jsonmem));
+        round = stoi(task_data_read(taskid, "round", jsonmem));
         regenerate = false;
     } else {
         cout << "Welcome to number guessing game!" << endl;
@@ -111,8 +45,10 @@ void guessGame(int taskid,
         if((!task_data_write(taskid, "guess", to_string(guess), user_name, username, jsonmem))
         || (!task_data_write(taskid, "goal", to_string(goal), user_name, username, jsonmem))
         || (!task_data_write(taskid, "round", to_string(round), user_name, username, jsonmem))) {
+
             cout << "Error: memory overflow. App is terminating." << endl;
             kill(username, taskid, jsonmem, mem, runningQueue, blockQueue, readyQueue);
+            return ;
         }
     }
 
@@ -179,6 +115,6 @@ void guessGame(int taskid,
             kill(username, taskid, jsonmem, mem, runningQueue, blockQueue, readyQueue);
         }
 
-//        block(username, taskid, mem, runningQueue, blockQueue, readyQueue);
+        block(username, taskid, mem, runningQueue, blockQueue, readyQueue);
     }
 }

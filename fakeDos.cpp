@@ -133,12 +133,10 @@ map<string, string> operation_description{ // the function description of all op
 };
 
 vector<string> app_list{
-    "addition.app",
     "guessGame.app"
 };
 
 map<string, string> app_description{
-    {"addition.app", "A calculator that helps you calculate addition."},
     {"guessGame.app", "A number guessing game."}
 };
 
@@ -500,7 +498,28 @@ void fakeDos() { // fakeDos main process
                 }
 
                 if (operation == "wake_up_task"){
+                    if (command_splited.size() < 2) {
+                        cout << "Error: Invalid input syntax." << endl;
+                    } else {
+                        string taskid = command_splited[1];
 
+                        if (wake_up(current_user, stoi(taskid), mem, runningQueue, blockQueue, readyQueue)) {
+
+                            string appname;
+
+                            for (int i = 0; i<100; i++) {
+                                if (mem[i].id == stoi(taskid)) {
+                                    appname = mem[i].app_name;
+                                    break;
+                                }
+                            }
+
+                            if (appname == "guessGame.app") {
+                                guessGame(stoi(taskid), false, current_user, user_name, jsonmem, mem,
+                                          runningQueue, blockQueue, readyQueue);
+                            }
+                        }
+                    }
                 }
             }
 

@@ -252,11 +252,13 @@ bool wake_up(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & r
                 }
             }
         }
-        if (find == 0) //No such tasks in the memory
-        {
-            cout << "You entered a wrong id!" << endl;
-        }
     }
+
+    if (find == 0) //No such tasks in the memory
+    {
+        cout << "You entered a wrong id!" << endl;
+    }
+
     task_management(mem, runningQueue, readyQueue);
     return TRUE;
 }

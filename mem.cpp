@@ -34,16 +34,26 @@ void task_mem(int taskid, int taskmem, string username, string & jsonmem){
 
     string id = to_string(taskid);
 
+    //Debug
+//    cout << taskmem << endl;
+
     if (reader.parse(jsonmem, root)){
-        if (!root.isMember(id)){
+        if (!root["taskmem"].isMember(id)){
             root["taskmem"][id] = taskmem;
+
+            //Debug
+//            cout << "GERE" << endl;
         }
         else {
             root["taskmem"][id] = root["taskmem"][id].asInt() + taskmem;
         }
         root["user"][username] = root["user"][username].asInt() + taskmem;
     }
-    jsonmem = root.toStyledString();
+
+    //Debug
+//    cout << root.toStyledString() << endl;
+
+    jsonmem = (root.toStyledString());
 }
 
 
@@ -90,10 +100,11 @@ bool limit_check(int mem, vector <string> l_u, string & jsonmem){
 
     int usage = 0;
     if (reader.parse(jsonmem, root)){
-        for (int i = 0; i < int(root["user"].size()); i++){
+        for (int i = 0; i < int(l_u.size()); i++){
             usage += root["user"][l_u[i]].asInt();
         }
     }
+
     if ((usage + mem) >= 0xFFFF){
         return false;
     }else return true;
@@ -102,10 +113,12 @@ bool limit_check(int mem, vector <string> l_u, string & jsonmem){
 int get_task_mem(int taskid, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
-    // cout << jsonmem;
+
+    //Debug
+//    cout << jsonmem;
 
     if (reader.parse(jsonmem, root)){
-        return root["taskmem"][taskid].asInt();
+        return root["taskmem"][to_string(taskid)].asInt();
     } else return 0;
 }
 
@@ -123,27 +136,25 @@ bool task_data_write(int taskid, string key, string value, vector <string> user_
     Json::Reader reader;
     Json::Value root;
 
-    //Debug
-    cout << taskid << " " << key << " " << value  << " " << sizeof(value) << " " << username << endl;
-
     string id = to_string(taskid);
     int datamem = sizeof(value);
 
-    //Debug
-    cout << datamem << endl;
-
     if (limit_check(datamem, user_name, jsonmem)){
         if (reader.parse(jsonmem, root)){
+            if (!root[id].isMember(key)) {
+                task_mem(taskid, datamem, username, jsonmem);
+            }
+        }
+
+        if (reader.parse(jsonmem, root)){
             root[id][key] = value;
-            task_mem(taskid, datamem, username, jsonmem);
+            jsonmem = root.toStyledString();
         }
     }
     else return false;
 
-    jsonmem = root.toStyledString();
-
     //Debug
-    cout << jsonmem << endl;
+//    cout << jsonmem << endl;
 
     return true;
 }

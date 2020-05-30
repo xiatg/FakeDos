@@ -97,7 +97,7 @@ void delete_user(vector<string> command_splited,
                     if (it2 != logged_in_users.end()) {
                         logged_in_users.erase(it2);
 
-                        user_mem_free(current_user, jsonmem);
+                        user_mem_free(username, jsonmem);
 
                         for (int i = 0; i < 100; i++) {
                             if ((mem[i].state == RUNNING) || (mem[i].state == BLOCK)) {
@@ -154,11 +154,15 @@ void log_in(vector<string> command_splited,
             vector<string>::iterator it_u = find(user_name.begin(), user_name.end(), username);
 
             if (it_u != user_name.end()) {
+
                 if (user_password[username] == password) {
 
                     if (limit_check(0x1000, logged_in_users, jsonmem)) {
 
                         user_mem_alloc(username, jsonmem);
+
+                        //Debug
+//                        cout << jsonmem << endl;
 
                         cout << "Welcome back, " << username << "!" << endl;
                         is_logged_in = true;
@@ -170,6 +174,7 @@ void log_in(vector<string> command_splited,
 
                         current_user = username;
                         current_path = user_route[username];
+
                     } else {
                         cout << "Error: insufficient memory to log in a new user." << endl;
                     }
@@ -213,6 +218,9 @@ void log_out(bool & is_logged_in,
         }
 
         current_user = "NULL";
+
+        //Debug
+        cout << jsonmem << endl;
 
         cout << "You have logged out." << endl;
     }
