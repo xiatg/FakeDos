@@ -45,7 +45,7 @@ void task_management()
     }
 }
 
-int create_task(string userName, string appName,int mem, string jsonmem)
+int create_task(string userName, string appName, string jsonmem)
 {
     int i, j, random_num;
     default_random_engine random;
@@ -63,26 +63,28 @@ int create_task(string userName, string appName,int mem, string jsonmem)
             usernames.push_back(mem[i].user_name);
         }
 
-    if(limit_check(mem, usernames, jsonmem)){
+    if (limit_check(0, usernames, jsonmem))
+    {
 
-    for (i = 0; i < 100; i++)
-        if (mem[i].state == NULL)
-            break;
-    mem[i].id = random_num;
-    mem[i].state = READY;
-    readyQueue.push_back(mem[i]);
-    mem[i].app_name = appName;
-    mem[i].user_name = userName;
+        for (i = 0; i < 100; i++)
+            if (mem[i].state == NULL)
+                break;
+        mem[i].id = random_num;
+        mem[i].state = READY;
+        readyQueue.push_back(mem[i]);
+        mem[i].app_name = appName;
+        mem[i].user_name = userName;
 
-    cout << "The task is created successfully, task id:" << mem[i].id << endl;
-    //print the task id
-    task_management();
+        cout << "The task is created successfully, task id:" << mem[i].id << endl;
+        //print the task id
+        task_management();
 
-    return mem[i].id;
+        return mem[i].id;
     }
 
-    else{
-        cout<<"Task creation failed."<<endl;
+    else
+    {
+        cout << "Task creation failed." << endl;
         return false;
     }
 }
@@ -250,7 +252,7 @@ bool wake_up(string userName, int id)
     }
 }
 
-bool kill(string userName, int id,string jsonmem)
+bool kill(string userName, int id, string jsonmem)
 {
     int i;
 
@@ -302,7 +304,7 @@ bool kill(string userName, int id,string jsonmem)
                     if (iter->id == mem[i].id)
                         blockQueue.erase(iter);
                 }
-                task_mem_free(id);
+                //task_mem_free(id);
             }
 
             else if (mem[i].state == READY)
@@ -315,7 +317,7 @@ bool kill(string userName, int id,string jsonmem)
                     if (iter->id == mem[i].id)
                         readyQueue.erase(iter);
                 }
-                task_mem_free(id,mem[i].user_name,jsonmem);
+                task_mem_free(id, mem[i].user_name, jsonmem);
             }
 
             break;
