@@ -29,7 +29,7 @@ ValueType task_data_read(int taskid, std::string key, std::string jsonmem);
 
 void user_mem_free(std::string username, std::string jsonmem);
 
-void task_mem_free(int taskid, std::string jsonmem);
+void task_mem_free(int taskid, std::string username, std::string jsonmem);
 
 bool limit_check(int mem, std::vector<std::string> user_name, std::string jsonmem);
 
