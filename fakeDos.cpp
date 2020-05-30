@@ -54,18 +54,13 @@ vector<string> operation_list{ // the list of all available operations
     "show_content",
     "change_path",
 
- //
-    "run",
-    "ls_t",
-    "ls_m",
-
  // App management commands
     "install",
     "appstore",
+    "run",
 
  // Task management commands
-    "create_task",
-    "display",
+    "list_task",
     "wake_up_task",
     "kill_task"
 
@@ -96,8 +91,7 @@ map<string, string> operation_syntax{ // the syntax for all operations
     {"ls_m", "ls_m"},
     {"install", "install (app name)"},
     {"appstore", "appstore"},
-    {"create_ask","create_task (user name) (app name)"},
-    {"display","display"},
+    {"list_task","list_task"},
     {"wake_up_task","wake_up_task (taskID)"},
     {"kill_task","kill_task (taskID)"}
 
@@ -128,25 +122,24 @@ map<string, string> operation_description{ // the function description of all op
         "and go to root directory by entering 'rt\'."},
 
     {"run", "Run apps."},
-    {"ls_t", "Show the informaiton of all tasks."},
-    {"ls_m", "Show the status of memory."},
 
     {"install", "Install the specific app under the current directory."},
     {"appstore", "Go to App Store and see all available apps."},
 
-    {"create_task","Create a task for a certain user."},
-    {"display","Display the information of task in memory."},
+    {"list_task","Display the information of task in memory."},
     {"wake_up_task","Wake up a task to turn it to ready state from block state."},
     {"kill_task","Kill a task."}
 
 };
 
 vector<string> app_list{
-    "addition"
+    "addition.app",
+    "guessGame.app"
 };
 
 map<string, string> app_description{
-    {"addition", "A calculator that helps you calculate addition."}
+    {"addition.app", "A calculator that helps you calculate addition."},
+    {"guessGame", "A number guessing game."}
 };
 
 vector<string> user_name;
@@ -160,6 +153,12 @@ bool exitable = false;
 bool is_logged_in = false;
 
 vector<string> logged_in_users;
+
+vector<PCB_type> runningQueue;
+vector<PCB_type> blockQueue;
+vector<PCB_type> readyQueue;
+
+struct PCB_type mem[100]; //a list stands for memory
 
 vector<string> command_split(string command) {
 
@@ -254,6 +253,8 @@ void fakeDosPre() {
     } else {
         read_users();
     }
+
+    init_mem(jsonmem);
 }
 
 void help() {
@@ -268,6 +269,26 @@ void exit() {
     cout << "System shutting down..." << endl << "See you next time!" << endl;
 }
 
+void run(string appname) {
+
+    string current_route = route_formating(fakeDosFolderPath, user_route[current_user]);
+    vector<string> fileNames = getFiles(current_route + "\\*");
+    if (!find(fileNames,appname)){
+        cout << "Error: App not found." << endl;
+        return;
+    } else {
+        int taskid = create_task(current_user, appname, jsonmem, mem, readyQueue, runningQueue);
+
+        if (appname == "guessGame.app") {
+            guessGame(taskid, true, current_user, user_name, jsonmem,
+                      mem, runningQueue, blockQueue, readyQueue);
+        }
+
+        if (appname == "addition.app") {
+
+        }
+    }
+}
 void fakeDos() { // fakeDos main process
     cout << "fakeDos Prototype" << endl;
     cout << "System boosting..." << endl;
@@ -275,11 +296,6 @@ void fakeDos() { // fakeDos main process
     fakeDosPre();
 
     cout << "Welcome to fakeDos! Type help for more information." << endl;
-
-
-    //cout << fakeDosFolderPath<<endl;
-    //cout << usersFilePath<<endl;
-
 
     while (exitable == false) {
 
@@ -299,22 +315,10 @@ void fakeDos() { // fakeDos main process
 
         getline(cin, command); // read the command as a whole line
 
-        /*
-        //Debug
-//        cout << command << endl;
-        */
-
         vector<string> command_splited = command_split(command); // split the command by blank space
         string operation = command_splited[0];
 
         vector<string>::iterator it = find(operation_list.begin(), operation_list.end(), operation); // see if the command exists
-
-        /*
-        //Debug
-//        for (int i = 0; i < int(command_splited.size()); i++) {
-//            cout << command_splited[i] << endl;
-//        }
-        */
 
         if (it != operation_list.end()) {
 
@@ -328,20 +332,23 @@ void fakeDos() { // fakeDos main process
             }
 
             if (operation == "delete_user") {
-                delete_user(command_splited, user_name, user_password, user_route, fakeDosFolderPath, logged_in_users, current_user);
+                delete_user(command_splited,
+                            user_name,
+                            user_password,
+                            user_route,
+                            fakeDosFolderPath,
+                            logged_in_users,
+                            current_user,
+                            jsonmem,
+                            mem,
+                            runningQueue,
+                            blockQueue,
+                            readyQueue);
                 write_users();
             }
 
-            if (operation == "change_user") {
-                change_user(is_logged_in, current_user);
-            }
-
-            if (operation == "log_out") {
-                log_out(is_logged_in, current_user, logged_in_users);
-            }
-
             if (operation == "log_in") {
-                log_in(command_splited, user_name, user_password, user_route, is_logged_in, current_user, current_path, logged_in_users);
+                log_in(command_splited, user_name, user_password, user_route, is_logged_in, current_user, current_path, logged_in_users, jsonmem);
             }
 
             if (operation == "ls_lu") {
@@ -359,133 +366,142 @@ void fakeDos() { // fakeDos main process
                 break;
             }
 
-            if (operation == "make_dir"){
-
-                if (command_splited.size()<2){
-                    cout << "Error: Invalid input syntax."<<endl;
-                } else{
-                    string name = command_splited[1];
-                    make_dir(name, fakeDosFolderPath, current_user, user_route);
-                }
-            }
-
-            if (operation == "make_file"){
-                if (command_splited.size()<2){
-                    cout << "Error: Invalid input syntax."<<endl;
-                } else {
-                    string name = command_splited[1];
-                    make_file(name,fakeDosFolderPath,current_user,user_route);
-                }
-            }
-
-            if (operation == "del_dir"){
-                if (command_splited.size()<2){
-                    cout << "Error: Invalid input syntax."<<endl;
-                } else {
-                    string name = command_splited[1];
-                    del_dir(name,fakeDosFolderPath, current_user,user_route);
-                }
-
-            }
-
-            if (operation == "del_file"){
-                if (command_splited.size()<2){
-                    cout << "Error: Invalid input syntax."<<endl;
-                } else {
-                    string name = command_splited[1];
-                    del_file(name,fakeDosFolderPath,current_user,user_route);
-                }
-
-            }
-
-            if (operation == "read"){
-                if (command_splited.size()<2){
-                    cout << "Error: Invalid input syntax."<<endl;
-                } else {
-                    string name = command_splited[1];
-                    read(name,fakeDosFolderPath,current_user,user_route);
-                }
-            }
-
-            if (operation == "write"){
-                if (command_splited.size()<2){
-                    cout << "Error: Invalid input syntax."<<endl;
-                } else {
-                    string name = command_splited[1];
-                    write(name,fakeDosFolderPath,current_user,user_route);
-                }
-            }
-
-            if (operation == "copy"){
-                if (command_splited.size()<3){
-                    cout << "Error: Invalid input syntax."<<endl;
-                } else {
-                    string this_name = command_splited[1];
-                    string taregt_name = command_splited[2];
-                    copy(this_name,taregt_name,fakeDosFolderPath,current_user,user_route);
-                }
-            }
-
-            if (operation == "move"){
-                if (command_splited.size()<3){
-                    cout << "Error: Invalid input syntax."<<endl;
-                } else {
-                    string this_name = command_splited[1];
-                    string taregt_name = command_splited[2];
-                    move(this_name,taregt_name,fakeDosFolderPath,current_user,user_route);
-                }
-            }
-
-            if (operation == "show_content"){
-                show_content(fakeDosFolderPath,current_user,user_route);
-            }
-
-            if (operation == "change_path"){
-                if (command_splited.size()<2){
-                    cout << "Error: Invalid input syntax."<<endl;
-                } else {
-                    string name = command_splited[1];
-                    change_path(name,fakeDosFolderPath,current_user,user_route);
-                }
-            }
-
-            if (operation == "run") {
-
-            }
-
-
-            if (operation == "appstore") {
-                show_apps(app_list, app_description);
-            }
-
-            if (operation == "install") {
-                if (command_splited.size() < 2) {
-                    cout << "Error: Invalid input syntax." << endl;
-                } else {
-                    string appname = command_splited[1];
-                    install(appname, app_list, fakeDosFolderPath, current_user, user_route);
-                }
-            }
-
-            if (operation == "ls_t") {
-
-            }
-
-            if (operation == "ls_m") {
-
-            }
-            if(operation == "create_task")
-            {
-
-            }
-            if(operation == "list_task"){
-                display(user_name, jsonmem);
-            }
-            if (operation == "wake_up_task"){
-
-            }
             if(operation == "kill"){
 
+            }
+
+            if(operation == "list_task"){
+                display(logged_in_users, jsonmem, mem, runningQueue, blockQueue, readyQueue);
+            }
+
+            if (is_logged_in) {
+
+                if (operation == "change_user") {
+                    change_user(is_logged_in, current_user);
+                }
+
+                if (operation == "log_out") {
+                    log_out(is_logged_in, current_user, logged_in_users,
+                            jsonmem, mem,
+                            runningQueue, blockQueue,
+                            readyQueue);
+                }
+
+                if (operation == "make_dir"){
+
+                    if (command_splited.size()<2){
+                        cout << "Error: Invalid input syntax."<<endl;
+                    } else{
+                        string name = command_splited[1];
+                        make_dir(name, fakeDosFolderPath, current_user, user_route);
+                    }
+                }
+
+                if (operation == "make_file"){
+                    if (command_splited.size()<2){
+                        cout << "Error: Invalid input syntax."<<endl;
+                    } else {
+                        string name = command_splited[1];
+                        make_file(name,fakeDosFolderPath,current_user,user_route);
+                    }
+                }
+
+                if (operation == "del_dir"){
+                    if (command_splited.size()<2){
+                        cout << "Error: Invalid input syntax."<<endl;
+                    } else {
+                        string name = command_splited[1];
+                        del_dir(name,fakeDosFolderPath, current_user,user_route);
+                    }
+
+                }
+
+                if (operation == "del_file"){
+                    if (command_splited.size()<2){
+                        cout << "Error: Invalid input syntax."<<endl;
+                    } else {
+                        string name = command_splited[1];
+                        del_file(name,fakeDosFolderPath,current_user,user_route);
+                    }
+
+                }
+
+                if (operation == "read"){
+                    if (command_splited.size()<2){
+                        cout << "Error: Invalid input syntax."<<endl;
+                    } else {
+                        string name = command_splited[1];
+                        read(name,fakeDosFolderPath,current_user,user_route);
+                    }
+                }
+
+                if (operation == "write"){
+                    if (command_splited.size()<2){
+                        cout << "Error: Invalid input syntax."<<endl;
+                    } else {
+                        string name = command_splited[1];
+                        write(name,fakeDosFolderPath,current_user,user_route);
+                    }
+                }
+
+                if (operation == "copy"){
+                    if (command_splited.size()<3){
+                        cout << "Error: Invalid input syntax."<<endl;
+                    } else {
+                        string this_name = command_splited[1];
+                        string taregt_name = command_splited[2];
+                        copy(this_name,taregt_name,fakeDosFolderPath,current_user,user_route);
+                    }
+                }
+
+                if (operation == "move"){
+                    if (command_splited.size()<3){
+                        cout << "Error: Invalid input syntax."<<endl;
+                    } else {
+                        string this_name = command_splited[1];
+                        string taregt_name = command_splited[2];
+                        move(this_name,taregt_name,fakeDosFolderPath,current_user,user_route);
+                    }
+                }
+
+                if (operation == "show_content"){
+                    show_content(fakeDosFolderPath,current_user,user_route);
+                }
+
+                if (operation == "change_path"){
+                    if (command_splited.size()<2){
+                        cout << "Error: Invalid input syntax."<<endl;
+                    } else {
+                        string name = command_splited[1];
+                        change_path(name,fakeDosFolderPath,current_user,user_route);
+                    }
+                }
+
+                if (operation == "run") {
+                    if (command_splited.size()<2){
+                        cout << "Error: Invalid input syntax."<<endl;
+                    } else {
+                        string appname = command_splited[1];
+                        run(appname);
+                    }
+                }
+
+                if (operation == "appstore") {
+                    show_apps(app_list, app_description);
+                }
+
+                if (operation == "install") {
+                    if (command_splited.size() < 2) {
+                        cout << "Error: Invalid input syntax." << endl;
+                    } else {
+                        string appname = command_splited[1];
+                        install(appname, app_list, fakeDosFolderPath, current_user, user_route);
+                    }
+                }
+
+                if (operation == "wake_up_task"){
+
+                }
             }
 
         } else {

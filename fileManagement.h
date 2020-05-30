@@ -73,4 +73,8 @@ string upper_route(string &current_route);
  */
 void change_path(string name, string fakeDosFolderPath, string current_user, map<string, string> &user_route );
 
+string route_formating(string fakeDosFolderPath, string str);
+
+bool find(vector<string> &fileNames, string name);
+
 #endif // FILEMANAGEMENT_H

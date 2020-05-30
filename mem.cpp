@@ -9,7 +9,7 @@
 #include <sstream>
 using namespace std;
 
-void init_mem(string jsonmem){
+void init_mem(string & jsonmem){
     Json::Value root, user, taskmem;
 
     root["user"] = user;
@@ -62,15 +62,14 @@ bool task_data_write(int taskid, string key, ValueType value, vector <string> us
     return true;
 }
 
-template <typename ValueType>
-ValueType task_data_read(int taskid, string key, string & jsonmem){
+string task_data_read(int taskid, string key, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
 
     string id = to_string(taskid);
 
     if (reader.parse(jsonmem, root)){
-        return root[id][key];
+        return root[id][key].asString();
     }
 }
 
@@ -106,14 +105,14 @@ void task_mem_free(int taskid, string username, string & jsonmem){
     jsonmem = root.toStyledString();
 }
 
-bool limit_check(int mem, vector <string> user_name, string & jsonmem){
+bool limit_check(int mem, vector <string> l_u, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
 
     int usage = 0;
     if (reader.parse(jsonmem, root)){
         for (int i = 0; i < int(root["user"].size()); i++){
-            usage += root["user"][user_name[i]].asInt();
+            usage += root["user"][l_u[i]].asInt();
         }
     }
     if ((usage + mem) >= 0xFFFF){

@@ -9,18 +9,7 @@ using namespace std;
 #define TRUE 1
 #define FALSE 0
 
-#define EMPTY 0
-#define RUNNING 1
-#define BLOCK 2
-#define READY 3
-
-vector<PCB_type> runningQueue;
-vector<PCB_type> blockQueue;
-vector<PCB_type> readyQueue;
-
-struct PCB_type mem[100]; //a list stands for memory
-
-void task_management()
+void task_management(vector<PCB_type> & runningQueue, vector<PCB_type> & readyQueue)
 {
     if (readyQueue.size() == 0)
     {
@@ -38,7 +27,7 @@ void task_management()
     }
 }
 
-int create_task(string userName, string appName, string & jsonmem)
+int create_task(string userName, string appName, string & jsonmem, PCB_type (&mem)[100], vector<PCB_type> & readyQueue, vector<PCB_type> & runningQueue)
 {
     int i, j, random_num;
     default_random_engine random;
@@ -70,7 +59,7 @@ int create_task(string userName, string appName, string & jsonmem)
 
         cout << "The task is created successfully, task id:" << mem[i].id << endl;
         //print the task id
-        task_management();
+        task_management(runningQueue, readyQueue);
 
         return mem[i].id;
     }
@@ -82,7 +71,7 @@ int create_task(string userName, string appName, string & jsonmem)
     }
 }
 
-void display(vector<string> user_name, string jsonmem)
+void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue)
 {
     int i;
     cout << "Number of tasks in memory: " << runningQueue.size() + readyQueue.size() + blockQueue.size() << endl;
@@ -112,15 +101,34 @@ void display(vector<string> user_name, string jsonmem)
             cout << "Memory Use:" << get_task_mem(mem[i].id, jsonmem) << endl;
         }
     }
-    cout << "User Memory Usage" << endl;
-    for (i = 0; i < int(user_name.size()); i++)
-    {
-        cout << "User name:" << user_name[i] << endl;
-        cout << "Memory Usage:" << get_user_mem(user_name[i], jsonmem) << endl;
+
+    cout << endl;
+
+    if (user_name.size() > 0) {
+
+        int used = 0;
+        int total = 0xFFFF;
+
+        cout << "User Memory Usage" << endl;
+        for (i = 0; i < int(user_name.size()); i++)
+        {
+            cout << "User name:" << user_name[i] << endl;
+            cout << "Memory Usage:" << get_user_mem(user_name[i], jsonmem) << endl;
+
+            used += get_user_mem(user_name[i], jsonmem);
+        }
+
+        cout << endl;
+
+        cout << "Used/Total: " << used << "/" << total << endl;
+
+    } else {
+
+        cout << "No user is using memory." << endl;
     }
 }
 
-bool block(string userName, int id)
+bool block(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue)
 {
     int i;
 
@@ -191,11 +199,11 @@ bool block(string userName, int id)
         cout << "You entered a wrong id!" << endl;
     }
 
-    task_management();
+    task_management(runningQueue, readyQueue);
     return TRUE;
 }
 
-bool wake_up(string userName, int id)
+bool wake_up(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue)
 {
     int i;
 
@@ -249,12 +257,16 @@ bool wake_up(string userName, int id)
         {
             cout << "You entered a wrong id!" << endl;
         }
-        task_management();
-        return TRUE;
     }
+    task_management(runningQueue, readyQueue);
+    return TRUE;
 }
 
-bool kill(string userName, int id, string & jsonmem)
+bool kill(string userName,
+          int id,
+          string & jsonmem,
+          PCB_type (&mem)[100],
+          vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue)
 {
     int i;
 
@@ -329,6 +341,6 @@ bool kill(string userName, int id, string & jsonmem)
     {
         cout << "You entered a wrong id!" << endl;
     }
-    task_management();
+    task_management(runningQueue, readyQueue);
     return TRUE;
 }
