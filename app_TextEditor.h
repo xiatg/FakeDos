@@ -58,7 +58,7 @@ void editText(EditorBuffer &editor);
 void editorHelp();
 
 // Initialize editor with data store in memory if it is a wake-up task
-void TextEditor(int taskid, bool wakeup, std::string & jsonmem, int textsize);
+void TextEditor(int taskid, bool wakeup, std::string & jsonmem);
 
 #endif // APP_TEXTEDITOR_H
 
