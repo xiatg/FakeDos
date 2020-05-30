@@ -25,7 +25,7 @@ void display(vector<string>, string, PCB_type (&mem)[100], vector<PCB_type> & ru
 bool block(string,int, PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue);
 bool wake_up(string,int, PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue);
 bool kill(string,int,string &, PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue);
-void task_management(vector<PCB_type> &, vector<PCB_type> &);
+void task_management(PCB_type (&mem)[100], vector<PCB_type> &, vector<PCB_type> &);
 
 
 #endif // TASK_MANAGEMENT_H

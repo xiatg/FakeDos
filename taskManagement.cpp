@@ -9,22 +9,27 @@ using namespace std;
 #define TRUE 1
 #define FALSE 0
 
-void task_management(vector<PCB_type> & runningQueue, vector<PCB_type> & readyQueue)
+void task_management(PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & readyQueue)
 {
-    if (readyQueue.size() == 0)
-    {
-        return;
-    }
+    if (readyQueue.empty())
+       {
+          cout << "No tasks in the ready Queue." << endl;
+          return;
+       }
 
-    else if (runningQueue.size() < 1)
-    {
-        while (runningQueue.size() < 1 && readyQueue.empty() == 0)
-        {
-            readyQueue.front().state = RUNNING;
-            runningQueue.push_back(readyQueue.front());
-            readyQueue.erase(readyQueue.begin());
-        }
-    }
+       else if (runningQueue.empty())
+       {
+          readyQueue[0].state = RUNNING;
+          runningQueue.push_back(readyQueue[0]);
+          readyQueue.erase(readyQueue.begin());
+       }
+       for (int i = 0; i < 100; i++)
+       {
+          if (runningQueue[0].id == mem[i].id)
+          {
+             mem[i].state = RUNNING;
+          }
+       }
 }
 
 int create_task(string userName, string appName, string & jsonmem, PCB_type (&mem)[100], vector<PCB_type> & readyQueue, vector<PCB_type> & runningQueue)
@@ -45,13 +50,13 @@ int create_task(string userName, string appName, string & jsonmem, PCB_type (&me
 
     mem[i].id = random_num;
     mem[i].state = READY;
-    readyQueue.push_back(mem[i]);
     mem[i].app_name = appName;
     mem[i].user_name = userName;
+    readyQueue.push_back(mem[i]);
 
     cout << "The task is created successfully, task id:" << mem[i].id << endl;
     //print the task id
-    task_management(runningQueue, readyQueue);
+    task_management(mem, runningQueue, readyQueue);
 
     return mem[i].id;
 }
@@ -158,8 +163,11 @@ bool block(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & run
                 vector<PCB_type>::iterator iter;
                 for (iter = runningQueue.begin(); iter != runningQueue.end(); iter++)
                 {
-                    if (iter->id == mem[i].id)
+                    if (iter->id == mem[i].id) {
                         runningQueue.erase(iter);
+                        break;
+                    }
+
                 }
             }
 
@@ -172,8 +180,11 @@ bool block(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & run
                 vector<PCB_type>::iterator iter;
                 for (iter = readyQueue.begin(); iter != readyQueue.end(); iter++)
                 {
-                    if (iter->id == mem[i].id)
+                    if (iter->id == mem[i].id) {
                         readyQueue.erase(iter);
+                        break;
+                    }
+
                 }
             }
         }
@@ -184,7 +195,7 @@ bool block(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & run
         cout << "You entered a wrong id!" << endl;
     }
 
-    task_management(runningQueue, readyQueue);
+    task_management(mem, runningQueue, readyQueue);
     return TRUE;
 }
 
@@ -232,8 +243,11 @@ bool wake_up(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & r
                     vector<PCB_type>::iterator iter;
                     for (iter = blockQueue.begin(); iter != blockQueue.end(); iter++)
                     {
-                        if (iter->id == mem[i].id)
+                        if (iter->id == mem[i].id) {
                             blockQueue.erase(iter);
+                            break;
+                        }
+
                     }
                 }
             }
@@ -243,7 +257,7 @@ bool wake_up(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & r
             cout << "You entered a wrong id!" << endl;
         }
     }
-    task_management(runningQueue, readyQueue);
+    task_management(mem, runningQueue, readyQueue);
     return TRUE;
 }
 
@@ -288,8 +302,11 @@ bool kill(string userName,
                 vector<PCB_type>::iterator iter;
                 for (iter = runningQueue.begin(); iter != runningQueue.end(); iter++)
                 {
-                    if (iter->id == mem[i].id)
+                    if (iter->id == mem[i].id) {
                         runningQueue.erase(iter);
+                        break;
+                    }
+
                 }
             }
 
@@ -300,8 +317,11 @@ bool kill(string userName,
                 vector<PCB_type>::iterator iter;
                 for (iter = blockQueue.begin(); iter != blockQueue.end(); iter++)
                 {
-                    if (iter->id == mem[i].id)
+                    if (iter->id == mem[i].id) {
                         blockQueue.erase(iter);
+                        break;
+                    }
+
                 }
                 //task_mem_free(id);
             }
@@ -313,8 +333,11 @@ bool kill(string userName,
                 vector<PCB_type>::iterator iter;
                 for (iter = readyQueue.begin(); iter != readyQueue.end(); iter++)
                 {
-                    if (iter->id == mem[i].id)
+                    if (iter->id == mem[i].id) {
                         readyQueue.erase(iter);
+                        break;
+                    }
+
                 }
                 task_mem_free(id, mem[i].user_name, jsonmem);
             }
@@ -326,6 +349,6 @@ bool kill(string userName,
     {
         cout << "You entered a wrong id!" << endl;
     }
-    task_management(runningQueue, readyQueue);
+    task_management(mem, runningQueue, readyQueue);
     return TRUE;
 }

@@ -123,8 +123,15 @@ bool task_data_write(int taskid, string key, string value, vector <string> user_
     Json::Reader reader;
     Json::Value root;
 
+    //Debug
+    cout << taskid << " " << key << " " << value  << " " << sizeof(value) << " " << username << endl;
+
     string id = to_string(taskid);
     int datamem = sizeof(value);
+
+    //Debug
+    cout << datamem << endl;
+
     if (limit_check(datamem, user_name, jsonmem)){
         if (reader.parse(jsonmem, root)){
             root[id][key] = value;
@@ -132,6 +139,11 @@ bool task_data_write(int taskid, string key, string value, vector <string> user_
         }
     }
     else return false;
+
     jsonmem = root.toStyledString();
+
+    //Debug
+    cout << jsonmem << endl;
+
     return true;
 }

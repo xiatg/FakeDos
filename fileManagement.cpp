@@ -92,10 +92,6 @@ void make_file(string name,string fakeDosFolderPath, string &current_user,
     string current_route;
     current_route = route_formating(fakeDosFolderPath,user_route[current_user]);
 
-    cout << fakeDosFolderPath << endl;
-    cout << user_route[current_user] << endl;
-    cout << current_route << endl;
-
     string command1 = "cd "+ current_route;
     string command2 = "cd .> "+name;
 

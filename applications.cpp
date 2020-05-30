@@ -178,5 +178,7 @@ void guessGame(int taskid,
             cout << "Error: memory overflow. App is terminating." << endl;
             kill(username, taskid, jsonmem, mem, runningQueue, blockQueue, readyQueue);
         }
+
+//        block(username, taskid, mem, runningQueue, blockQueue, readyQueue);
     }
 }
