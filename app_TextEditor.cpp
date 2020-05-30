@@ -3,8 +3,10 @@
  * and functions in editorBuffer.h
  */
 #include "app_TextEditor.h"
+#include "mem.h"
 #include <iostream>
 #include <iomanip>
+#include <string>
 using namespace std;
 
 void toUpperCaseInPlace(string& str) {
@@ -87,6 +89,24 @@ void EditorBuffer::showContents(){
     cout << '^'<< endl;
 }
 
+bool EditorBuffer::HangOnEditor(int taskid, vector <string> user_name, string username, string & jsonmem){
+    int i = 0;
+    bool flag = true;
+    for (Cell *cp = start->link; cp!=NULL; cp = cp->link){
+        string key = "text" + to_string(i);
+        flag = task_data_write(taskid, key, to_string(cp->ch), user_name, username, jsonmem);
+        if (!flag) break;
+        i++;
+    }
+    if (flag) {
+        cout << "Hangon succeeded!" << endl;
+        return true;
+    } else{
+        task_mem_free(taskid, username, jsonmem);
+        cout << "Hangon failed! Lack of memory space" << endl;
+        return false;
+    }
+}
 
 void editorHelp(){
     cout << endl;
@@ -122,13 +142,16 @@ void editorHelp(){
 
     cout << "|"<< right<< setw(7)<<"Q:"<< left<<
             setw(55)<< " Quits from the editor"<<"|"<<endl;
+    
+    cout << "|"<< right<< setw(7)<<"HO:"<< left<<
+            setw(55)<< " Hang On the editor task and jump to next task"<<"|"<<endl;
 
     cout << "+--------------------------------------------------------------+"<<endl;
     cout << endl;
 
 }
 
-void editText(EditorBuffer &editor){
+void editText(EditorBuffer &editor, vector <string> user_name, string username, string jsonmem, int taskid){
     string command;
     editorHelp();
 
@@ -164,7 +187,11 @@ void editText(EditorBuffer &editor){
                 editorHelp();
             }
             if (command == "Q"){
-                cout << endl;
+                cout << "Texteditor killed" <<endl;
+                return;
+            }
+            if (command == "HO"){
+                editor.HangOnEditor(taskid, user_name, username, jsonmem);
                 return;
             }
         }
@@ -183,8 +210,15 @@ void editText(EditorBuffer &editor){
 }
 
 
-void TextEditor(){
+void TextEditor(int taskid, bool wakeup, string & jsonmem, int textsize){
     EditorBuffer editor;
+    if (wakeup){
+        for (int i = 0; i < textsize; i++){
+            string key = "text" + to_string(i);
+            string data = task_data_read(taskid, key, jsonmem);
+            data = data.c_str();
+            editor.insertCharacter(data[0]);
+        }
+    }
     editText(editor);
 }
-
