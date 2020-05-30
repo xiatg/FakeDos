@@ -34,12 +34,7 @@ string fakeDosFolderPath;
 //string systemFolderPath;
 string usersFilePath;
 
-//vector<PCB_type> runningQueue;
-//vector<PCB_type> blockQueue;
-//vector<PCB_type> readyQueue;
-
-//struct PCB_type mem[100]; //a list stands for memory
-
+string jsonmem;
 
 vector<string> operation_list{ // the list of all available operations
     "exit",

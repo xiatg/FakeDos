@@ -18,7 +18,7 @@ void init_mem(string jsonmem){
     jsonmem = root.toStyledString();
 }
 
-void user_mem_alloc(string username, string jsonmem){
+void user_mem_alloc(string username, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
 
@@ -28,7 +28,7 @@ void user_mem_alloc(string username, string jsonmem){
     jsonmem = root.toStyledString();
 }
 
-void task_mem(int taskid, int taskmem, string username, string jsonmem){
+void task_mem(int taskid, int taskmem, string username, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
 
@@ -47,7 +47,7 @@ void task_mem(int taskid, int taskmem, string username, string jsonmem){
 }
 
 template <typename ValueType>
-bool task_data_write(int taskid, string key, ValueType value, vector <string> user_name, string username, string jsonmem){
+bool task_data_write(int taskid, string key, ValueType value, vector <string> user_name, string username, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
 
@@ -63,7 +63,7 @@ bool task_data_write(int taskid, string key, ValueType value, vector <string> us
 }
 
 template <typename ValueType>
-ValueType task_data_read(int taskid, string key, string jsonmem){
+ValueType task_data_read(int taskid, string key, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
 
@@ -75,7 +75,7 @@ ValueType task_data_read(int taskid, string key, string jsonmem){
 }
 
 
-void user_mem_free(string username, string jsonmem){
+void user_mem_free(string username, string & jsonmem){
     Json::Reader reader;
     Json::Value root, user;
 
@@ -92,7 +92,7 @@ void user_mem_free(string username, string jsonmem){
 
 }
 
-void task_mem_free(int taskid, string username, string jsonmem){
+void task_mem_free(int taskid, string username, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
     string id = to_string(taskid);
@@ -106,7 +106,7 @@ void task_mem_free(int taskid, string username, string jsonmem){
     jsonmem = root.toStyledString();
 }
 
-bool limit_check(int mem, vector <string> user_name, string jsonmem){
+bool limit_check(int mem, vector <string> user_name, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
 
@@ -121,7 +121,7 @@ bool limit_check(int mem, vector <string> user_name, string jsonmem){
     }else return true;
 }
 
-int get_task_mem(int taskid, string jsonmem){
+int get_task_mem(int taskid, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
     // cout << jsonmem;
@@ -131,7 +131,7 @@ int get_task_mem(int taskid, string jsonmem){
     } else return 0;
 }
 
-int get_user_mem(string username, string jsonmem){
+int get_user_mem(string username, string & jsonmem){
     Json::Reader reader;
     Json::Value root;
     // cout << jsonmem;
