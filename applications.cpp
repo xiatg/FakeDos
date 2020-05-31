@@ -5,6 +5,7 @@
 #include <applications.h>
 #include <taskManagement.h>
 #include <mem.h>
+#include <ctime>
 
 using namespace std;
 
@@ -27,6 +28,11 @@ void guessGame(int taskid,
     /*data field*/
     int guess = 0, goal = 0, round = 0;
     bool regenerate = true;
+
+    time_t t = time(0);
+    tm *gmtm = gmtime(&t);
+
+    default_random_engine random(gmtm->tm_sec);
 
     /*retrieve data*/
     if (!first_exe) {
@@ -56,8 +62,6 @@ void guessGame(int taskid,
     bool killable = false;
     string command;
     while (true) {
-
-        default_random_engine random;
 
         if (regenerate) {
             round = 0;
@@ -90,7 +94,7 @@ void guessGame(int taskid,
                             cout << "It takes " << round << " rounds to get the goal number!" << endl;
                             cout << "Try again? (Y/else)";
                             getline(cin, command);
-                            if (command == "Y") regenerate = true;
+                            if ((command == "Y") || (command == "y")) regenerate = true;
                             else {
                                 killable = true;
                                 break;
