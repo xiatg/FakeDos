@@ -95,17 +95,18 @@ bool EditorBuffer::HangOnEditor(int taskid, vector <string> user_name, string us
                                 vector<PCB_type> & runningQueue,
                                 vector<PCB_type> & blockQueue,
                                 vector<PCB_type> & readyQueue){
-    int i = 0;
+    int textsize = 0;
     bool flag = true;
     for (Cell *cp = start->link; cp!=NULL; cp = cp->link){
-        i++;
-        string key = "text" + to_string(i);
-        flag = task_data_write(taskid, key, to_string(cp->ch), user_name, username, jsonmem);
+        textsize++;
+        string key = "text" + to_string(textsize);
+        string x;
+        x = cp->ch;
+        flag = task_data_write(taskid, key, x, user_name, username, jsonmem);
         if (!flag) break;
     }
 
-    flag = task_data_write(taskid, "textsize", to_string(i-1), user_name, username, jsonmem);
-
+    flag = task_data_write(taskid, "textsize", to_string(textsize), user_name, username, jsonmem);
     if (flag) {
         cout << "Hangon succeeded!" << endl;
 
@@ -246,7 +247,7 @@ void TextEditor(int taskid, bool wakeup, string & jsonmem,
 
     if (wakeup){
         int textsize = stoi(task_data_read(taskid, "textsize", jsonmem));
-        for (int i = 0; i < textsize; i++){
+        for (int i = 1; i <= textsize; i++){
             string key = "text" + to_string(i);
             string data = task_data_read(taskid, key, jsonmem);
             data = data.c_str();
