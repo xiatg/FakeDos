@@ -293,7 +293,7 @@ void run(string appname) {
 }
 void fakeDos() { // fakeDos main process
     cout << "fakeDos Prototype" << endl;
-    cout << "System boosting..." << endl;
+    cout << "System booting..." << endl;
 
     fakeDosPre();
 
