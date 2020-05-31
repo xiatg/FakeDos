@@ -43,7 +43,7 @@ void guessGame(int taskid,
         regenerate = false;
     } else {
         cout << "Welcome to number guessing game!" << endl;
-        cout << "I've radnomly generated a number, every round you can take a guess and I will tell you if the number is bigger or smaller than the value that you guess." << endl;
+        cout << "I've randomly generated a number, every round you can take a guess and I will tell you if the number is bigger or smaller than the value that you guess." << endl;
         cout << "Try to get the correct value within as less rounds as you can!" << endl;
         cout << "Type hangon to save the game for later." << endl;
         cout << "Type exit to exit the game." << endl;

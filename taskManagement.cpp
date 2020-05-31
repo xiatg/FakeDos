@@ -72,11 +72,13 @@ int create_task(string userName, string appName, string & jsonmem, PCB_type (&me
 void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue)
 {
     int i;
+    cout<<endl;
     cout << "Number of tasks in memory: " << runningQueue.size() + readyQueue.size() + blockQueue.size() << endl;
     for (i = 0; i < 100; i++)
     {
         if (mem[i].state == RUNNING)
         {
+            cout << endl;
             cout << "Task id =" << mem[i].id << " is running." << endl;
             cout << "User name:" << mem[i].user_name << endl;
             cout << "App name:" << mem[i].app_name << endl;
@@ -85,6 +87,7 @@ void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vec
 
         if (mem[i].state == READY)
         {
+            cout<<endl;
             cout << "Task id =" << mem[i].id << " is ready." << endl;
             cout << "User name:" << mem[i].user_name << endl;
             cout << "App name:" << mem[i].app_name << endl;
@@ -93,6 +96,7 @@ void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vec
 
         if (mem[i].state == BLOCK)
         {
+            cout<<endl;
             cout << "Task id =" << mem[i].id << " is blocked." << endl;
             cout << "User name:" << mem[i].user_name << endl;
             cout << "App name:" << mem[i].app_name << endl;
@@ -124,6 +128,7 @@ void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vec
 
         cout << "No user is using memory." << endl;
     }
+    cout <<endl;
 }
 
 bool block(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue)
