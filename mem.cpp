@@ -23,7 +23,7 @@ void user_mem_alloc(string username, string & jsonmem){
     Json::Value root;
 
     if (reader.parse(jsonmem, root)){
-        root["user"][username] = 0x1000;  //  0x1000 represent OS memory usage
+        root["user"][username] = 0xFF;  //  0x1000 represent OS memory usage
     }
     jsonmem = root.toStyledString();
 }
@@ -105,7 +105,7 @@ bool limit_check(int mem, vector <string> l_u, string & jsonmem){
         }
     }
 
-    if ((usage + mem) >= 0xFFFF){
+    if ((usage + mem) >= 0x7FF){
         return false;
     }else return true;
 }
