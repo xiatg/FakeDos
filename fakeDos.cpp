@@ -295,9 +295,10 @@ void run(string appname) {
         if(appname == "todoList.app"){
             TODO_List(taskid, true, current_user, user_name, jsonmem,
                       mem, runningQueue, blockQueue, readyQueue);
-
+        }
     }
 }
+
 void fakeDos() { // fakeDos main process
     cout << "fakeDos Prototype" << endl;
     cout << "System booting..." << endl;
@@ -574,6 +575,7 @@ void fakeDos() { // fakeDos main process
             cout << "Invalid command: " << operation << endl;
         }
 
-    }
+        }
 
+    }
 }
