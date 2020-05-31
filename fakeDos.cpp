@@ -368,7 +368,7 @@ void fakeDos() { // fakeDos main process
                 break;
             }
 
-            if(operation == "kill"){
+            if(operation == "kill_task"){
 
                 if (command_splited.size() < 2) {
                     cout << "Error: Invalid input syntax." << endl;
@@ -376,8 +376,16 @@ void fakeDos() { // fakeDos main process
 
                     string taskid = command_splited[1];
 
-                    kill(current_user, stoi(taskid), jsonmem,
-                         mem, runningQueue, blockQueue, readyQueue);
+                    if (taskid.size() < 10) {
+                        if (stoll(taskid) < 2147483646) {
+                            kill(current_user, stoi(taskid), jsonmem,
+                                 mem, runningQueue, blockQueue, readyQueue);
+                        } else {
+                            cout << "Error: task id can't be that large." << endl;
+                        }
+                    } else {
+                        cout << "Error: task id can't be that large." << endl;
+                    }
                 }
 
             }
@@ -517,26 +525,36 @@ void fakeDos() { // fakeDos main process
                     } else {
                         string taskid = command_splited[1];
 
-                        if (wake_up(current_user, stoi(taskid), mem, runningQueue, blockQueue, readyQueue)) {
+                        if (taskid.size() < 10) {
+                            if (stoll(taskid) < 2147483646) {
 
-                            string appname;
+                                if (wake_up(current_user, stoi(taskid), mem, runningQueue, blockQueue, readyQueue)) {
 
-                            for (int i = 0; i<100; i++) {
-                                if (mem[i].id == stoi(taskid)) {
-                                    appname = mem[i].app_name;
-                                    break;
+                                    string appname;
+
+                                    for (int i = 0; i<100; i++) {
+                                        if (mem[i].id == stoi(taskid)) {
+                                            appname = mem[i].app_name;
+                                            break;
+                                        }
+                                    }
+
+                                    if (appname == "guessGame.app") {
+                                        guessGame(stoi(taskid), false, current_user, user_name, jsonmem, mem,
+                                                  runningQueue, blockQueue, readyQueue);
+                                    }
+
+                                    if (appname == "textEditor.app") {
+                                        TextEditor(stoi(taskid), true, jsonmem, current_user, user_name, mem,
+                                                   runningQueue, blockQueue, readyQueue);
+                                    }
                                 }
-                            }
 
-                            if (appname == "guessGame.app") {
-                                guessGame(stoi(taskid), false, current_user, user_name, jsonmem, mem,
-                                          runningQueue, blockQueue, readyQueue);
+                            } else {
+                                cout << "Error: task id can't be that large." << endl;
                             }
-
-                            if (appname == "textEditor.app") {
-                                TextEditor(stoi(taskid), true, jsonmem, current_user, user_name, mem,
-                                           runningQueue, blockQueue, readyQueue);
-                            }
+                        } else {
+                            cout << "Error: task id can't be that large." << endl;
                         }
                     }
                 }

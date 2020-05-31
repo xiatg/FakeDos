@@ -13,7 +13,7 @@ void task_management(PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vect
 {
     if (readyQueue.empty())
        {
-          cout << "No tasks in the ready Queue." << endl;
+//          cout << "No tasks in the ready Queue." << endl;
           return;
        }
 
@@ -42,6 +42,9 @@ int create_task(string userName, string appName, string & jsonmem, PCB_type (&me
         while (mem[j].id == random_num)
         {
             random_num = random();
+            while (random_num > 2147483646) {
+                random_num = random();
+            }
         }
 
     for (i = 0; i < 100; i++)

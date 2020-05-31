@@ -220,7 +220,7 @@ void log_out(bool & is_logged_in,
         current_user = "NULL";
 
         //Debug
-        cout << jsonmem << endl;
+//        cout << jsonmem << endl;
 
         cout << "You have logged out." << endl;
     }
