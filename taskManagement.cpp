@@ -100,7 +100,7 @@ void display(vector<string> user_name, string jsonmem, PCB_type (&mem)[100], vec
     if (user_name.size() > 0) {
 
         int used = 0;
-        int total = 0x800;
+        int total = 0x7FF;
 
         cout << "User Memory Usage" << endl;
         for (i = 0; i < int(user_name.size()); i++)
