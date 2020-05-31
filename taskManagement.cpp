@@ -202,10 +202,12 @@ bool block(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & run
     return TRUE;
 }
 
-bool wake_up(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue)
+bool wake_up(string userName,
+             int id,
+             PCB_type (&mem)[100],
+             vector<PCB_type> & runningQueue, vector<PCB_type> & blockQueue, vector<PCB_type> & readyQueue)
 {
     int i;
-
     if (runningQueue.empty() && readyQueue.empty() && blockQueue.empty())
     {
         cout << "No task in the memory." << endl;
@@ -229,29 +231,31 @@ bool wake_up(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & r
             {
                 cout << "You can only wake up your task." << endl;
                 return false;
+            }
 
-                if (mem[i].state == EMPTY) //The task is already killed.
-                    cout << "The task does not exist." << endl;
-
-                else if (mem[i].state != BLOCK) //The task is not blocked.
-                    cout << "The task is either running or ready. "
-                            "No need to wake it up."
-                         << endl;
-
-                else //the task is blocked.
+            if (mem[i].state == EMPTY){
+                cout << "The task does not exist." << endl;
+                return false;
+            }
+            else if (mem[i].state != BLOCK){
+                cout << "The task is either running or ready. "
+                        "No need to wake it up."
+                     << endl;
+                return false;
+            }
+            else //the task is blocked.
+            {
+                mem[i].state = READY; //The task is waken up.
+                cout << "The task is waken up to ready state." << endl;
+                readyQueue.push_back(mem[i]);
+                vector<PCB_type>::iterator iter;
+                for (iter = blockQueue.begin(); iter != blockQueue.end(); iter++)
                 {
-                    mem[i].state = READY; //The task is waken up.
-                    cout << "The task is waken up to ready state." << endl;
-                    readyQueue.push_back(mem[i]);
-                    vector<PCB_type>::iterator iter;
-                    for (iter = blockQueue.begin(); iter != blockQueue.end(); iter++)
-                    {
-                        if (iter->id == mem[i].id) {
-                            blockQueue.erase(iter);
-                            break;
-                        }
-
+                    if (iter->id == mem[i].id) {
+                        blockQueue.erase(iter);
+                        break;
                     }
+
                 }
             }
         }
@@ -259,11 +263,12 @@ bool wake_up(string userName, int id, PCB_type (&mem)[100], vector<PCB_type> & r
 
     if (find == 0) //No such tasks in the memory
     {
-        cout << "You entered a wrong id!" << endl;
+        cout << "Task " << id << " is not found." << endl;
+        return false;
     }
 
     task_management(mem, runningQueue, readyQueue);
-    return TRUE;
+    return true;
 }
 
 bool kill(string userName,
