@@ -157,27 +157,29 @@ void log_in(vector<string> command_splited,
 
                 if (user_password[username] == password) {
 
-                    if (limit_check(0x1000, logged_in_users, jsonmem)) {
+                    vector<string>::iterator it_lu = find(logged_in_users.begin(), logged_in_users.end(), username);
 
-                        user_mem_alloc(username, jsonmem);
+                    if (it_lu == logged_in_users.end()) {
 
-                        //Debug
-//                        cout << jsonmem << endl;
-
-                        cout << "Welcome back, " << username << "!" << endl;
-                        is_logged_in = true;
-
-                        vector<string>::iterator it_liu = find(logged_in_users.begin(), logged_in_users.end(), username);
-                        if (it_liu == logged_in_users.end()) {
-                            logged_in_users.push_back(username);
+                        if (limit_check(0x100, logged_in_users, jsonmem)) {
+                            user_mem_alloc(username, jsonmem);
+                        } else {
+                            cout << "Error: insufficient memory to log in a new user." << endl;
+                            return ;
                         }
-
-                        current_user = username;
-                        current_path = user_route[username];
-
-                    } else {
-                        cout << "Error: insufficient memory to log in a new user." << endl;
                     }
+
+                    cout << "Welcome back, " << username << "!" << endl;
+                    is_logged_in = true;
+
+                    vector<string>::iterator it_liu = find(logged_in_users.begin(), logged_in_users.end(), username);
+                    if (it_liu == logged_in_users.end()) {
+                        logged_in_users.push_back(username);
+                    }
+
+                    current_user = username;
+                    current_path = user_route[username];
+
                 } else {
                     cout << "Error: incorrent password." << endl;
                 }
@@ -218,9 +220,6 @@ void log_out(bool & is_logged_in,
         }
 
         current_user = "NULL";
-
-        //Debug
-//        cout << jsonmem << endl;
 
         cout << "You have logged out." << endl;
     }
