@@ -158,15 +158,19 @@ void TODO_List(int taskid,
            bool f0 = task_data_write(taskid, "name"+to_string(i), list_for_all[i].name, user_name, username, jsonmem);
            bool f1 = task_data_write(taskid, "remark"+to_string(i), list_for_all[i].remark, user_name, username, jsonmem);
            bool f2 = task_data_write(taskid, "state"+to_string(i),to_string(list_for_all[i].state),user_name,username,jsonmem);
-           if(f0||f1||f2==false){
+
+           if((f0 == false)||(f1 == false)||(f2==false)){
                flag = false;
+               break;
            }
        }
+
       if (flag==false)
       {
          cout << "Error: memory overflow. App is terminating." << endl;
          kill(username, taskid, jsonmem, mem, runningQueue, blockQueue, readyQueue);
+      } else {
+          block(username, taskid, mem, runningQueue, blockQueue, readyQueue);
       }
-      block(username, taskid, mem, runningQueue, blockQueue, readyQueue);
    }
 }
