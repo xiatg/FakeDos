@@ -23,7 +23,7 @@ void user_mem_alloc(string username, string & jsonmem){
     Json::Value root;
 
     if (reader.parse(jsonmem, root)){
-        root["user"][username] = 0xFF;  //  0x1000 represent OS memory usage
+        root["user"][username] = 0xFF;  //  0xFF represent OS memory usage
     }
     jsonmem = root.toStyledString();
 }
