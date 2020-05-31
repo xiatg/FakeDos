@@ -17,6 +17,7 @@
 #include <taskManagement.h>
 #include <mem.h>
 #include <app_TextEditor.h>
+#include <todo_list.h>
 using namespace std;
 
 string current_user = "NULL";
@@ -135,12 +136,14 @@ map<string, string> operation_description{ // the function description of all op
 
 vector<string> app_list{
     "guessGame.app",
-    "textEditor.app"
+    "textEditor.app",
+    "todoList.app"
 };
 
 map<string, string> app_description{
     {"guessGame.app", "A number guessing game."},
-    {"textEditor.app", "A textEditor."}
+    {"textEditor.app", "A textEditor."},
+    {"todoList.app", "A todo List."}
 };
 
 vector<string> user_name;
@@ -289,6 +292,10 @@ void run(string appname) {
             TextEditor(taskid, false, jsonmem, current_user, user_name, mem,
                        runningQueue, blockQueue, readyQueue);
         }
+        if(appname == "todoList.app"){
+            TODO_List(taskid, true, current_user, user_name, jsonmem,
+                      mem, runningQueue, blockQueue, readyQueue);
+
     }
 }
 void fakeDos() { // fakeDos main process
@@ -548,6 +555,9 @@ void fakeDos() { // fakeDos main process
                                         TextEditor(stoi(taskid), true, jsonmem, current_user, user_name, mem,
                                                    runningQueue, blockQueue, readyQueue);
                                     }
+                                    if (appname == "todoList.app") {
+                                guessGame(stoi(taskid), false, current_user, user_name, jsonmem, mem,
+                                          runningQueue, blockQueue, readyQueue);
                                 }
 
                             } else {
