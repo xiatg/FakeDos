@@ -161,7 +161,7 @@ void log_in(vector<string> command_splited,
 
                     if (it_lu == logged_in_users.end()) {
 
-                        if (limit_check(0x100, logged_in_users, jsonmem)) {
+                        if (limit_check(0xFF, logged_in_users, jsonmem)) {
                             user_mem_alloc(username, jsonmem);
                         } else {
                             cout << "Error: insufficient memory to log in a new user." << endl;

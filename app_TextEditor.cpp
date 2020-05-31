@@ -107,10 +107,9 @@ bool EditorBuffer::HangOnEditor(int taskid, vector <string> user_name, string us
     }
 
     flag = task_data_write(taskid, "textsize", to_string(textsize), user_name, username, jsonmem);
+
     if (flag) {
         cout << "Hangon succeeded!" << endl;
-
-        cout << jsonmem << endl;
 
         block(username, taskid, mem,
               runningQueue, blockQueue, readyQueue);

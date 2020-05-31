@@ -38,7 +38,11 @@ int create_task(string userName, string appName, string & jsonmem, PCB_type (&me
     default_random_engine random;
 
     random_num = random();
-    for (j = 0; j < 100; j++)
+    for (j = 0; j < 100; j++) {
+
+        //Debug
+//        cout << mem[j].id << endl;
+
         while (mem[j].id == random_num)
         {
             random_num = random();
@@ -46,6 +50,7 @@ int create_task(string userName, string appName, string & jsonmem, PCB_type (&me
                 random_num = random();
             }
         }
+    }
 
     for (i = 0; i < 100; i++)
         if (mem[i].state == EMPTY)
@@ -318,6 +323,7 @@ bool kill(string userName,
                     }
 
                 }
+                task_mem_free(id, mem[i].user_name, jsonmem);
             }
 
             else if (mem[i].state == BLOCK)

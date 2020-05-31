@@ -141,5 +141,8 @@ bool task_data_write(int taskid, string key, string value, vector <string> user_
         jsonmem = root.toStyledString();
     }
 
+    //Debug
+//    cout << jsonmem << endl;
+
     return true;
 }
