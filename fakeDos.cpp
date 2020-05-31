@@ -557,7 +557,7 @@ void fakeDos() { // fakeDos main process
                                                    runningQueue, blockQueue, readyQueue);
                                     }
                                     if (appname == "todoList.app") {
-                                guessGame(stoi(taskid), false, current_user, user_name, jsonmem, mem,
+                                TODO_List(stoi(taskid), false, current_user, user_name, jsonmem, mem,
                                           runningQueue, blockQueue, readyQueue);
                                 }
 
