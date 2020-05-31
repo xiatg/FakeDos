@@ -376,7 +376,7 @@ void fakeDos() { // fakeDos main process
 
                     string taskid = command_splited[1];
 
-                    if (taskid.size() < 10) {
+                    if (taskid.size() <= 10) {
                         if (stoll(taskid) < 2147483646) {
                             kill(current_user, stoi(taskid), jsonmem,
                                  mem, runningQueue, blockQueue, readyQueue);
@@ -525,7 +525,7 @@ void fakeDos() { // fakeDos main process
                     } else {
                         string taskid = command_splited[1];
 
-                        if (taskid.size() < 10) {
+                        if (taskid.size() <= 10) {
                             if (stoll(taskid) < 2147483646) {
 
                                 if (wake_up(current_user, stoi(taskid), mem, runningQueue, blockQueue, readyQueue)) {
